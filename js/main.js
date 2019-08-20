@@ -5,13 +5,9 @@ let board = [
 ];
 let turn = false;   //todo true human, false AI
 
-
-document.onload = function () {
-
-    console.log("ttteeesssttt");
-    console.log("Runnnnnn <--------");
+window.onload = function (){
     let square = document.querySelectorAll(".square");
-    console.log(square[0]);
+    console.log(square.keys());
     // refreshBoard(board);
     for (let i = 0; i < square.length; i++) {
         square[i].onclick = function(){
@@ -21,7 +17,12 @@ document.onload = function () {
     }
 };
 
-document.onload();
+function main() {
+    console.log("Runnnnnn <--------");
+    console.log(document.querySelector("#board"));
+}
+
+// document.onload();
 
 function refreshBoard(inBoard) {
     let z = 0;
