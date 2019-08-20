@@ -1,27 +1,32 @@
 window.onload = function (){
     let board = [
         [" ", " ", " "],
-        [" ", " ", " "],
+        [" ", "O", " "],
         [" ", " ", " "],
     ];
 
-    let turn = false;   //todo true human, false AI
+    let turn = true;   //todo true human, false AI
     let allHtmlSquares = document.querySelectorAll(".square");
     document.querySelector("#btnReset").addEventListener("click", function (event) {
-        refreshBoard(board, allHtmlSquares)
-
+        refreshHtmlBoard(board, allHtmlSquares)
     });
 
     for (let i = 0; i < allHtmlSquares.length; i++) {
         allHtmlSquares[i].onclick = function(){
-            allHtmlSquares[i].querySelector("p").innerHTML = "X";
+            if (turn && allHtmlSquares[i].querySelector("p").innerHTML !== "O") {
+                allHtmlSquares[i].querySelector("p").innerHTML = "X";
+            }
             console.log(allHtmlSquares[i].getAttribute("value"));
         }
     }
+
+
+
+
 };
 
 
-function refreshBoard(inBoard, htmlSquares) {
+function refreshHtmlBoard(inBoard, htmlSquares) {
     console.log("refreshBoard");
     let z = 0;
     for (let y = 0; y < 3; y++) {
