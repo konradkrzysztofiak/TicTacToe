@@ -14,9 +14,20 @@ let freshBoard = [
     [" ", " ", " "],
 ];
 
+let coordinates = {
+    1: [0, 0],
+    2: [0, 1],
+    3: [0, 2],
+    4: [1, 0],
+    5: [1, 1],
+    6: [1, 2],
+    7: [2, 0],
+    8: [2, 1],
+    9: [2, 2]
+};
 
 
-window.onload = function (){
+window.onload = function () {
     // todo allHTMLs
     let htmlAllSquares = document.querySelectorAll(".square");
     let htmlDifficulty = document.querySelector("#difficultMessage");
@@ -46,18 +57,23 @@ window.onload = function (){
 
     //todo init
     for (let i = 0; i < htmlAllSquares.length; i++) {
-        htmlAllSquares[i].onclick = function(){
+        htmlAllSquares[i].onclick = function () {
             if (turn && htmlAllSquares[i].querySelector("p").innerHTML === " ") {
                 htmlAllSquares[i].querySelector("p").innerHTML = userSign;
 
                 gameInProgress = true;
+                if (gameStart) {
+                    if (turn && htmlAllSquares[i].querySelector("p").innerHTML !== "O") {
+                        htmlAllSquares[i].querySelector("p").innerHTML = "X";
+                        fillBoard(coordinates[this.id], "X");
+                        checkWin();
+                    }
+                }
             }
-        }
+        };
+        refreshHtmlBoard(htmlAllSquares, freshBoard);
     }
-    refreshHtmlBoard(htmlAllSquares, freshBoard);
-
 };
-
 
 function refreshHtmlBoard(htmlSquares, bordIn) {
     let z = 0;
@@ -92,3 +108,44 @@ function setUserSignO(htmlYourSign) {
     userSign = "O";
     htmlYourSign.innerHTML = "<p>Your sign: " + userSign + "</p>";
 }
+
+function fillBoard(coordinates, value) {
+    board[coordinates[0]][coordinates[1]] = value;
+}
+
+function checkWin() {
+    if (checkRow() || checkColumn()) {
+        alert("U win!");
+        gameStart = false;
+    }
+}
+
+function checkRow() {
+    for (let j = 0; j < board.length; j++) {
+        for (let i = 0; i <= board[j].length; i++) {
+            if (board[j][i] !== " ") {
+                let firstInRow = board[j][0];
+                if (board[j][i + 1] === firstInRow && board[j][i + 2] === firstInRow) {
+                    return true;
+                }
+            }
+        }
+    }
+}
+
+function checkColumn() {
+    for (let i = 0; i < board.length; i++) {
+        for (let j = 0; j < board.length; j++) {
+            if (board[j][i] !== " ") {
+                let firstInColumn = board[j][i];
+                if (j < 1) {
+                    if (board[j + 1][i] === firstInColumn && board[j + 2][i] === firstInColumn) {
+                        return true;
+                    }
+                }
+            }
+        }
+    }
+
+}
+
