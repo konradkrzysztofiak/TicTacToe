@@ -3,6 +3,7 @@ let userSign = "X";
 let turn = true;   //todo true human, false AI
 let difficulty = 1; //todo 0 random 1 smarter 2 the smartest
 let gameInProgress = false;
+
 let board = [
     [" ", " ", " "],
     [" ", " ", " "],
@@ -32,9 +33,9 @@ window.onload = function () {
     let htmlAllSquares = document.querySelectorAll(".square");
     let htmlDifficulty = document.querySelector("#difficultMessage");
     let htmlYourSign = document.querySelector("#chooseSignMessage");
-    htmlYourSign.innerHTML = "<p>Your sign: " + userSign + "</p>";
+    htmlYourSign.innerHTML = "<p>Your sign: " + localStorage.sign + "</p>";
     document.querySelector("#welcomeMessage").innerHTML = "<p>" + localStorage.nick + " Let's play !</p>";
-    htmlDifficulty.innerHTML = "<p>Difficulty: " + difficultMap.get(difficulty) + "</p>";
+    htmlDifficulty.innerHTML = "<p>Difficulty: " + localStorage.difficulty + "</p>";
 
 
     //todo allListeners
