@@ -9,18 +9,18 @@ window.onload = function () {
         // passNick(nick);;
     });
 
-    document.getElementById('difficulty').onclick = function() {
+    document.getElementById('difficulty').onclick = function () {
         let value = getRadioValue(this, 'difficulty');
         localStorage.difficulty = value;
     };
 
-    document.getElementById('difficulty').onsubmit = function() {
+    document.getElementById('difficulty').onsubmit = function () {
         let value = getRadioValue(this, 'sign');
         localStorage.sign = value;
     };
 
     newGame.addEventListener('click', function () {
-        if (document.getElementById("createNewGame").style.display === "none"){
+        if (document.getElementById("createNewGame").style.display === "none") {
             document.getElementById("createNewGame").style.display = "block";
         } else {
             document.getElementById("createNewGame").style.display = "none"
@@ -32,10 +32,10 @@ window.onload = function () {
         let value;
         let radios = form.elements[name];
 
-        for (let i=0, len=radios.length; i<len; i++) {
-            if ( radios[i].checked ) { // radio checked?
-                value = radios[i].value; // if so, hold its value in val
-                break; // and break out of for loop
+        for (let i = 0, len = radios.length; i < len; i++) {
+            if (radios[i].checked) {
+                value = radios[i].value;
+                break;
             }
         }
         return value;
@@ -43,7 +43,6 @@ window.onload = function () {
 
 
 };
-
 
 
 // function passNick(nick) {
