@@ -2,7 +2,7 @@ let difficultMap = new Map([[1, "Easy"], [2, "Medium"], [3, "Hard"]]);
 let userSign = "X";
 let turn = true;   //todo true human, false AI
 let difficulty = 1; //todo 0 random 1 smarter 2 the smartest
-let gameInProgress = false;
+let gameInProgress = true;
 let board = [
     [" ", " ", " "],
     [" ", " ", " "],
@@ -45,7 +45,9 @@ window.onload = function () {
         decreaseDifficulty(htmlDifficulty);
     });
     document.querySelector("#btnReset").addEventListener("click", function () {
-        refreshHtmlBoard(htmlAllSquares)
+        resetBoard();
+        refreshHtmlBoard(htmlAllSquares, freshBoard);
+        gameInProgress = turn;
     });
     document.querySelector("#btc-chooseSignX").addEventListener("click", function () {
         setUserSignX(htmlYourSign);
@@ -54,59 +56,71 @@ window.onload = function () {
         setUserSignO(htmlYourSign);
     });
 
+    refreshHtmlBoard(htmlAllSquares, freshBoard);
+
     //todo init
     for (let i = 0; i < htmlAllSquares.length; i++) {
         htmlAllSquares[i].onclick = function () {
             if (htmlAllSquares[i].querySelector("p").innerHTML === " ") {
                 //todo Human part
-                console.log("Human");
-                fillBoard(coordinates[this.id], userSign);
-                refreshHtmlBoard(htmlAllSquares, board);
-                if (checkWin()) {
-                    alert("win user")
-                }
-
-                //todo AI easy part
-                console.log("AI");
-                while (true) {
-                    let y = Math.round(Math.random() * 2);
-                    let x = Math.round(Math.random() * 2);
-                    if (board[y][x] === " ") {
-                        board[y][x] = (userSign === "X")?"O":"X";
-                        break;
+                if (gameInProgress) {
+                    putMarkerOnBoard(coordinates[this.id], userSign);
+                    refreshHtmlBoard(htmlAllSquares, board);
+                    if (checkWin()) {
+                        gameInProgress = false;
+                        setTimeout(function () {
+                            alert(localStorage.nick + "WON !!!");
+                        }, 300);
                     }
                 }
-                refreshHtmlBoard(htmlAllSquares, board);
-                if (checkWin()) {
-                    alert("win AI")
+                //todo AI easy part
+                if (gameInProgress) {
+                    while (true) {
+                        let y = Math.round(Math.random() * 2);
+                        let x = Math.round(Math.random() * 2);
+                        if (board[y][x] === " ") {
+                            board[y][x] = (userSign === "X") ? "O" : "X";
+                            break;
+                        }
+                    }
+                    refreshHtmlBoard(htmlAllSquares, board);
+                    if (checkWin()) {
+                        gameInProgress = false;
+                        setTimeout(function () {
+                            alert("AI WON !!!");
+                        }, 300);
+                    }
                 }
-                console.log("--------------");
                 //todo END One round
             }
         };
     }
-    refreshHtmlBoard(htmlAllSquares, freshBoard);
 };
+
+function resetBoard() {
+    for (let y = 0; y < 3; y++) {
+        for (let x = 0; x < 3; x++) {
+            board[y][x] = " ";
+        }
+    }
+}
 
 function refreshHtmlBoard(htmlSquares, bordIn) {
     let z = 0;
     for (let y = 0; y < 3; y++) {
         for (let x = 0; x < 3; x++) {
-            // console.log(bordIn[y][x]);
             htmlSquares[z++].querySelector("p").innerHTML = bordIn[y][x];
         }
     }
 }
 
 function increaseDifficulty(htmlIncrease) {
-    // console.log(difficulty);
     if (difficulty < 3 && difficulty++) {
         htmlIncrease.innerHTML = "<p>Difficulty: " + difficultMap.get(difficulty) + "</p>";
     }
 }
 
 function decreaseDifficulty(htmlIncrease) {
-    // console.log(difficulty);
     if (difficulty > 1 && difficulty--) {
         htmlIncrease.innerHTML = "<p>Difficulty: " + difficultMap.get(difficulty) + "</p>";
     }
@@ -122,14 +136,13 @@ function setUserSignO(htmlYourSign) {
     htmlYourSign.innerHTML = "<p>Your sign: " + userSign + "</p>";
 }
 
-function fillBoard(coordinates, value) {
+function putMarkerOnBoard(coordinates, value) {
     board[coordinates[0]][coordinates[1]] = value;
 }
 
 function checkWin() {
     if (checkRow() || checkColumn() || checkDiagonal()) {
-        // alert("U win!");
-        gameInProgress = false;
+        return turn;
     }
 }
 
