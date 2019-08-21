@@ -2,6 +2,7 @@ let difficultMap = new Map([[1, "Easy"], [2, "Medium"], [3, "Hard"]]);
 let userSign = "X";
 let turn = true;   //todo true human, false AI
 let difficulty = 1; //todo 0 random 1 smarter 2 the smartest
+let gameInProgress = false;
 let board = [
     [" ", " ", " "],
     [" ", " ", " "],
@@ -25,7 +26,7 @@ window.onload = function (){
     htmlDifficulty.innerHTML = "<p>Difficulty: " + difficultMap.get(difficulty) + "</p>";
 
 
-    //todo allListiener
+    //todo allListeners
     document.querySelector("#btc-increase").addEventListener("click", function () {
         increaseDifficulty(htmlDifficulty);
     });
@@ -43,24 +44,27 @@ window.onload = function (){
     });
 
 
-    //todo mark X
+    //todo init
     for (let i = 0; i < htmlAllSquares.length; i++) {
         htmlAllSquares[i].onclick = function(){
-            if (turn && htmlAllSquares[i].querySelector("p").innerHTML !== "O") {
-                htmlAllSquares[i].querySelector("p").innerHTML = "X";
+            if (turn && htmlAllSquares[i].querySelector("p").innerHTML === " ") {
+                htmlAllSquares[i].querySelector("p").innerHTML = userSign;
+
+                gameInProgress = true;
             }
-            console.log(htmlAllSquares[i].getAttribute("value"));
         }
     }
+    refreshHtmlBoard(htmlAllSquares, freshBoard);
+
 };
 
 
-function refreshHtmlBoard(htmlSquares) {
+function refreshHtmlBoard(htmlSquares, bordIn) {
     let z = 0;
     for (let y = 0; y < 3; y++) {
         for (let x = 0; x < 3; x++) {
-            console.log(board[y][x]);
-            htmlSquares[z++].querySelector("p").innerHTML = board[y][x];
+            console.log(bordIn[y][x]);
+            htmlSquares[z++].querySelector("p").innerHTML = bordIn[y][x];
         }
     }
 }
