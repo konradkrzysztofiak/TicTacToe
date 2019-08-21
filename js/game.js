@@ -62,6 +62,14 @@ window.onload = function () {
                 htmlAllSquares[i].querySelector("p").innerHTML = userSign;
                 fillBoard(coordinates[this.id], userSign);
                 gameInProgress = true;
+                if (turn) {
+                    console.log("Human");
+                    turn = false;
+                } else {
+                    console.log("AI");
+                    turn = true;
+                }
+
                 // if (gameStart) {
                 //     if (turn && htmlAllSquares[i].querySelector("p").innerHTML !== "O") {
                 //         htmlAllSquares[i].querySelector("p").innerHTML = "X";
