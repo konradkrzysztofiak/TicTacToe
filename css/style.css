@@ -20,7 +20,12 @@
     /*min-height: 50px;*/
     /*background-color: white;*/
     background-color: rgba(255,255,255,0.5);
+    cursor: pointer;
 
+}
+
+#board .square:hover{
+    opacity: 0.7;
 }
 
 #board .square p{
