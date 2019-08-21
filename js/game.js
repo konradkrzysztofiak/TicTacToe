@@ -42,15 +42,17 @@ window.onload = function () {
     htmlTurn.innerHTML = "<p>Actual Turn: Ai</p>";
 
     //todo allListeners
+
     // document.querySelector("#btc-increase").addEventListener("click", function () {
     //     increaseDifficulty(htmlDifficulty);
     // });
     // document.querySelector("#btc-decrease").addEventListener("click", function () {
     //     decreaseDifficulty(htmlDifficulty);
     // });
-    // document.querySelector("#btnReset").addEventListener("click", function (event) {
-    //     refreshHtmlBoard(htmlAllSquares)
-    // });
+    document.querySelector("#btnReset").addEventListener("click", function (event) {
+        refreshHtmlBoard(htmlAllSquares,board);
+        //cos tu nie dziala
+    });
     // document.querySelector("#btc-chooseSignX").addEventListener("click", function () {
     //     setUserSignX(htmlYourSign);
     // });
