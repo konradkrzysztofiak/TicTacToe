@@ -1,41 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>TicTacToe</title>
-        <link rel="stylesheet" href="css/style.css">
-        <script src="js/main.js"></script>
-    </head>
-    <body>
-        <div id="board">
-            <div class="square" value="0">
-                <p></p>
-            </div>
-            <div class="square" value="1">
-                <p></p>
-            </div>
-            <div class="square" value="2">
-                <p></p>
-            </div>
-            <div class="square" value="3">
-                <p></p>
-            </div>
-            <div class="square" value="4">
-                <p></p>
-            </div>
-            <div class="square" value="5">
-                <p></p>
-            </div>
-            <div class="square" value="6">
-                <p></p>
-            </div>
-            <div class="square" value="7">
-                <p></p>
-            </div>
-            <div class="square" value="8">
-                <p></p>
-            </div>
-            <button id="btnReset" type="button" >Reset</button>
-        </div>
-    </body>
+<head>
+    <meta charset="UTF-8">
+    <title>TicTacToe</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/login.js"></script>
+</head>
+<body>
+<div id="login">
+    <form method="post" action="./html/game.html">
+        <label for="nick">Nick</label>
+        <input id="nick" type="text" required data-error="Can't be empty" placeholder="Write your nick name" pattern="^[A-Za-z0-9]{1,10}$">
+        <button type="submit" class="login-btn">Login</button>
+    </form>
+</div>
+</body>
 </html>

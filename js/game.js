@@ -1,9 +1,7 @@
 window.onload = function (){
-    console.log("pass");
-    console.log(localStorage.nick);
     let board = [
         [" ", " ", " "],
-        [" ", "O", " "],
+        [" ", " ", " "],
         [" ", " ", " "],
     ];
 
@@ -12,20 +10,17 @@ window.onload = function (){
     document.querySelector("#btnReset").addEventListener("click", function (event) {
         refreshHtmlBoard(board, allHtmlSquares)
     });
+    let welcomeMessage = document.querySelector("#welcomeMessage").innerHTML = "<p>" + localStorage.nick + " Let's play !</p>";
+
 
     for (let i = 0; i < allHtmlSquares.length; i++) {
         allHtmlSquares[i].onclick = function(){
             if (turn && allHtmlSquares[i].querySelector("p").innerHTML !== "O") {
                 allHtmlSquares[i].querySelector("p").innerHTML = "X";
-                console.log(localStorage.nick.value);
             }
             console.log(allHtmlSquares[i].getAttribute("value"));
         }
     }
-
-
-
-
 };
 
 
