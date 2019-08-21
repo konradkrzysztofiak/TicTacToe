@@ -62,6 +62,7 @@ window.onload = function () {
                 htmlAllSquares[i].querySelector("p").innerHTML = userSign;
                 fillBoard(coordinates[this.id], userSign);
                 gameInProgress = true;
+                checkWin();
                 // if (gameStart) {
                 //     if (turn && htmlAllSquares[i].querySelector("p").innerHTML !== "O") {
                 //         htmlAllSquares[i].querySelector("p").innerHTML = "X";
@@ -114,9 +115,10 @@ function fillBoard(coordinates, value) {
 }
 
 function checkWin() {
-    if (checkRow() || checkColumn()) {
+
+    if (checkRow() || checkColumn() || checkDiagonal()) {
         alert("U win!");
-        gameStart = false;
+        gameInProgress = false;
     }
 }
 
@@ -146,6 +148,22 @@ function checkColumn() {
             }
         }
     }
+}
 
+function checkDiagonal() {
+    for (let i = 0; i < board.length; i++) {
+        for (let j = 0; j < board.length; j++) {
+            if (board[j][i] !== " ") {
+                let firstSign = board[0][i];
+                if (j < 1) {
+                    if (board[j + 1][i + 1] === firstSign && board[j + 2][i + 2] === firstSign ||
+                        board[j + 1][i - 1] === firstSign && board[j + 2][i - 2] === firstSign) {
+                        return true;
+                    }
+                }
+            }
+
+        }
+    }
 }
 
