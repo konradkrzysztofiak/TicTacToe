@@ -44,7 +44,7 @@ window.onload = function () {
     document.querySelector("#btc-decrease").addEventListener("click", function () {
         decreaseDifficulty(htmlDifficulty);
     });
-    document.querySelector("#btnReset").addEventListener("click", function (event) {
+    document.querySelector("#btnReset").addEventListener("click", function () {
         refreshHtmlBoard(htmlAllSquares)
     });
     document.querySelector("#btc-chooseSignX").addEventListener("click", function () {
@@ -54,29 +54,34 @@ window.onload = function () {
         setUserSignO(htmlYourSign);
     });
 
-
     //todo init
     for (let i = 0; i < htmlAllSquares.length; i++) {
         htmlAllSquares[i].onclick = function () {
             if (htmlAllSquares[i].querySelector("p").innerHTML === " ") {
-                htmlAllSquares[i].querySelector("p").innerHTML = userSign;
+                //todo Human part
+                console.log("Human");
                 fillBoard(coordinates[this.id], userSign);
-                gameInProgress = true;
-                if (turn) {
-                    console.log("Human");
-                    turn = false;
-                } else {
-                    console.log("AI");
-                    turn = true;
+                refreshHtmlBoard(htmlAllSquares, board);
+                if (checkWin()) {
+                    alert("win user")
                 }
 
-                // if (gameStart) {
-                //     if (turn && htmlAllSquares[i].querySelector("p").innerHTML !== "O") {
-                //         htmlAllSquares[i].querySelector("p").innerHTML = "X";
-                //
-                //
-                //     }
-                // }
+                //todo AI easy part
+                console.log("AI");
+                while (true) {
+                    let y = Math.round(Math.random() * 2);
+                    let x = Math.round(Math.random() * 2);
+                    if (board[y][x] === " ") {
+                        board[y][x] = (userSign === "X")?"O":"X";
+                        break;
+                    }
+                }
+                refreshHtmlBoard(htmlAllSquares, board);
+                if (checkWin()) {
+                    alert("win AI")
+                }
+                console.log("--------------");
+                //todo END One round
             }
         };
     }
@@ -87,21 +92,21 @@ function refreshHtmlBoard(htmlSquares, bordIn) {
     let z = 0;
     for (let y = 0; y < 3; y++) {
         for (let x = 0; x < 3; x++) {
-            console.log(bordIn[y][x]);
+            // console.log(bordIn[y][x]);
             htmlSquares[z++].querySelector("p").innerHTML = bordIn[y][x];
         }
     }
 }
 
 function increaseDifficulty(htmlIncrease) {
-    console.log(difficulty);
+    // console.log(difficulty);
     if (difficulty < 3 && difficulty++) {
         htmlIncrease.innerHTML = "<p>Difficulty: " + difficultMap.get(difficulty) + "</p>";
     }
 }
 
 function decreaseDifficulty(htmlIncrease) {
-    console.log(difficulty);
+    // console.log(difficulty);
     if (difficulty > 1 && difficulty--) {
         htmlIncrease.innerHTML = "<p>Difficulty: " + difficultMap.get(difficulty) + "</p>";
     }
@@ -123,7 +128,7 @@ function fillBoard(coordinates, value) {
 
 function checkWin() {
     if (checkRow() || checkColumn() || checkDiagonal()) {
-        alert("U win!");
+        // alert("U win!");
         gameInProgress = false;
     }
 }
