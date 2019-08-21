@@ -18,18 +18,15 @@ window.onload = function (){
             if (turn && allHtmlSquares[i].querySelector("p").innerHTML !== "O") {
                 allHtmlSquares[i].querySelector("p").innerHTML = "X";
             }
-            console.log(allHtmlSquares[i].getAttribute("value"));
         }
     }
 };
 
 
 function refreshHtmlBoard(inBoard, htmlSquares) {
-    console.log("refreshBoard");
     let z = 0;
     for (let y = 0; y < 3; y++) {
         for (let x = 0; x < 3; x++) {
-            console.log(inBoard[y][x]);
             htmlSquares[z++].querySelector("p").innerHTML = inBoard[y][x];
         }
     }
