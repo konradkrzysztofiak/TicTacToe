@@ -58,21 +58,21 @@ window.onload = function () {
     //todo init
     for (let i = 0; i < htmlAllSquares.length; i++) {
         htmlAllSquares[i].onclick = function () {
-            if (turn && htmlAllSquares[i].querySelector("p").innerHTML === " ") {
+            if (htmlAllSquares[i].querySelector("p").innerHTML === " ") {
                 htmlAllSquares[i].querySelector("p").innerHTML = userSign;
-
+                fillBoard(coordinates[this.id], userSign);
                 gameInProgress = true;
-                if (gameStart) {
-                    if (turn && htmlAllSquares[i].querySelector("p").innerHTML !== "O") {
-                        htmlAllSquares[i].querySelector("p").innerHTML = "X";
-                        fillBoard(coordinates[this.id], "X");
-                        checkWin();
-                    }
-                }
+                // if (gameStart) {
+                //     if (turn && htmlAllSquares[i].querySelector("p").innerHTML !== "O") {
+                //         htmlAllSquares[i].querySelector("p").innerHTML = "X";
+                //
+                //
+                //     }
+                // }
             }
         };
-        refreshHtmlBoard(htmlAllSquares, freshBoard);
     }
+    refreshHtmlBoard(htmlAllSquares, freshBoard);
 };
 
 function refreshHtmlBoard(htmlSquares, bordIn) {
