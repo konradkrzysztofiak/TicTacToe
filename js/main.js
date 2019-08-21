@@ -1,4 +1,6 @@
 window.onload = function (){
+    console.log("pass");
+    console.log(localStorage.nick);
     let board = [
         [" ", " ", " "],
         [" ", "O", " "],
@@ -15,6 +17,7 @@ window.onload = function (){
         allHtmlSquares[i].onclick = function(){
             if (turn && allHtmlSquares[i].querySelector("p").innerHTML !== "O") {
                 allHtmlSquares[i].querySelector("p").innerHTML = "X";
+                console.log(localStorage.nick.value);
             }
             console.log(allHtmlSquares[i].getAttribute("value"));
         }
