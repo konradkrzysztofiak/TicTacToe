@@ -27,8 +27,7 @@ let coordinates = {
 };
 
 
-
-window.onload = function (){
+window.onload = function () {
     // todo allHTMLs
     let htmlAllSquares = document.querySelectorAll(".square");
     let htmlDifficulty = document.querySelector("#difficultMessage");
@@ -58,7 +57,7 @@ window.onload = function (){
 
     //todo mark X
     for (let i = 0; i < htmlAllSquares.length; i++) {
-        htmlAllSquares[i].onclick = function(){
+        htmlAllSquares[i].onclick = function () {
             if (gameStart) {
                 if (turn && htmlAllSquares[i].querySelector("p").innerHTML !== "O") {
                     htmlAllSquares[i].querySelector("p").innerHTML = "X";
@@ -104,13 +103,14 @@ function setUserSignO(htmlYourSign) {
     userSign = "O";
     htmlYourSign.innerHTML = "<p>Your sign: " + userSign + "</p>";
 }
+
 function fillBoard(coordinates, value) {
     board[coordinates[0]][coordinates[1]] = value;
 }
 
 function checkWin() {
 
-    if (checkRow() || checkColumn()) {
+    if (checkRow() || checkColumn() || checkDiagonal()) {
         alert("U win!");
         gameStart = false;
     }
@@ -143,6 +143,22 @@ function checkColumn() {
             }
         }
     }
+}
 
+function checkDiagonal() {
+    for (let i = 0; i < board.length; i++) {
+        for (let j = 0; j < board.length; j++) {
+            if (board[j][i] !== " ") {
+                let firstSign = board[0][i];
+                if (j < 1) {
+                    if (board[j + 1][i + 1] === firstSign && board[j + 2][i + 2] === firstSign ||
+                        board[j + 1][i - 1] === firstSign && board[j + 2][i - 2] === firstSign) {
+                        return true;
+                    }
+                }
+            }
+
+        }
+    }
 }
 
