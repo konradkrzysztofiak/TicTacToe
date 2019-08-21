@@ -8,6 +8,7 @@
     display: flex;
     flex-direction: row;
     flex-flow: wrap;
+    background-color: rgba(0,0,0,0.3);
 }
 #board .square {
     justify-content: center;
@@ -17,7 +18,9 @@
     width: 100px;
     height: 100px;
     /*min-height: 50px;*/
-    background-color: white;
+    /*background-color: white;*/
+    background-color: rgba(255,255,255,0.5);
+
 }
 
 #board .square p{
@@ -25,6 +28,7 @@
 }
 
 body{
+    margin: 0;
     background-image: url("../img/bg.png");
     text-align: center;
 }
@@ -79,9 +83,26 @@ h1{
     color: floralwhite;
     font-weight: bold;
     margin-bottom: 10px;
-
-
 }
+
+#playerInfo{
+    position: absolute;
+    width: 350px;
+    height: 332px;
+    top: 30%;
+    left: 32%;
+    border: 4px dotted;
+    background-color: rgba(0,0,0,0.3);
+    color: floralwhite;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+#btnReset {
+    position: relative;
+    left: 40%;
+}
+
 
 
 

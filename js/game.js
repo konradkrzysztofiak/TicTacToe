@@ -1,5 +1,5 @@
 let difficultMap = new Map([[1, "Easy"], [2, "Medium"], [3, "Hard"]]);
-let userSign = "X";
+let userSign = localStorage.sign;
 let turn = true;   //todo true human, false AI
 let difficulty = 1; //todo 0 random 1 smarter 2 the smartest
 let gameInProgress = false;
@@ -33,27 +33,30 @@ window.onload = function () {
     let htmlAllSquares = document.querySelectorAll(".square");
     let htmlDifficulty = document.querySelector("#difficultMessage");
     let htmlYourSign = document.querySelector("#chooseSignMessage");
+    let htmlPoints = document.querySelector("#points");
+    let htmlTurn = document.querySelector("#turn");
     htmlYourSign.innerHTML = "<p>Your sign: " + localStorage.sign + "</p>";
-    document.querySelector("#welcomeMessage").innerHTML = "<p>" + localStorage.nick + " Let's play !</p>";
-    htmlDifficulty.innerHTML = "<p>Difficulty: " + localStorage.difficulty + "</p>";
-
+    document.querySelector("#welcomeMessage").innerHTML = "<p>Hello " + localStorage.nick + " Let's play !</p>";
+    htmlDifficulty.innerHTML = "<p>Difficulty level: " + localStorage.difficulty + "</p>";
+    htmlPoints.innerHTML = "<p>Your Points: 0</p>";
+    htmlTurn.innerHTML = "<p>Actual Turn: Ai</p>";
 
     //todo allListeners
-    document.querySelector("#btc-increase").addEventListener("click", function () {
-        increaseDifficulty(htmlDifficulty);
-    });
-    document.querySelector("#btc-decrease").addEventListener("click", function () {
-        decreaseDifficulty(htmlDifficulty);
-    });
-    document.querySelector("#btnReset").addEventListener("click", function (event) {
-        refreshHtmlBoard(htmlAllSquares)
-    });
-    document.querySelector("#btc-chooseSignX").addEventListener("click", function () {
-        setUserSignX(htmlYourSign);
-    });
-    document.querySelector("#btc-chooseSignO").addEventListener("click", function () {
-        setUserSignO(htmlYourSign);
-    });
+    // document.querySelector("#btc-increase").addEventListener("click", function () {
+    //     increaseDifficulty(htmlDifficulty);
+    // });
+    // document.querySelector("#btc-decrease").addEventListener("click", function () {
+    //     decreaseDifficulty(htmlDifficulty);
+    // });
+    // document.querySelector("#btnReset").addEventListener("click", function (event) {
+    //     refreshHtmlBoard(htmlAllSquares)
+    // });
+    // document.querySelector("#btc-chooseSignX").addEventListener("click", function () {
+    //     setUserSignX(htmlYourSign);
+    // });
+    // document.querySelector("#btc-chooseSignO").addEventListener("click", function () {
+    //     setUserSignO(htmlYourSign);
+    // });
 
 
     //todo init
