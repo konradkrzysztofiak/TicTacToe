@@ -4,30 +4,15 @@
     <meta charset="UTF-8">
     <title>TicTacToe</title>
     <link rel="stylesheet" href="css/style.css">
+    <script src="js/login.js"></script>
 </head>
 <body>
-<div id="board">
-    <div class="square">
-        <div class="sign">X</div>
-    </div>
-    <div class="square">
-        <div class="sign">O</div>
-    </div>
-    <div class="square">
-    </div>
-    <div class="square">
-    </div>
-    <div class="square">
-    </div>
-    <div class="square">
-    </div>
-    <div class="square">
-    </div>
-    <div class="square">
-    </div>
-    <div class="square">
-    </div>
+<div id="login">
+    <form method="post" action="./html/game.html">
+        <label for="nick">Nick</label>
+        <input id="nick" type="text" required data-error="Can't be empty" placeholder="Write your nick name" pattern="^[A-Za-z0-9]{1,10}$">
+        <button type="submit" class="login-btn">Login</button>
+    </form>
 </div>
-
 </body>
 </html>
