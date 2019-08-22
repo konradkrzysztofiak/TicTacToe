@@ -3,6 +3,7 @@ let nick = localStorage.nick;
 let difficulty = localStorage.difficulty; //todo 0 random 1 smarter 2 the smartest
 let userSign = localStorage.sign;
 let userPoints = 0; //todo ----> We need write this in JSON <----
+let AIPoints = 0;
 let turn = "human";   //todo <--- I had to change this ....>
 let winning = "";
 let board = [
@@ -51,13 +52,15 @@ window.onload = function () {
     let htmlAllSquares = document.querySelectorAll(".square");
     let htmlDifficulty = document.querySelector("#difficultMessage");
     let htmlYourSign = document.querySelector("#chooseSignMessage");
-    let htmlPoints = document.querySelector("#points");
+    let htmlUserPoints = document.querySelector("#userPoints");
+    let htmlAIPoints = document.querySelector("#AIPoints");
     let htmlTurn = document.querySelector("#turn");
     let htmlWinnerIsMessage = document.querySelector("#winnerIsMessage");
     htmlYourSign.innerHTML = "<p>Your sign: " + localStorage.sign + "</p>";
     document.querySelector("#welcomeMessage").innerHTML = "<p>Hello " + nick + " Let's play !</p>";
     htmlDifficulty.innerHTML = "<p>Difficulty level: " + difficulty + "</p>";
-    htmlPoints.innerHTML = "<p>Your Points: " + userPoints + "</p>";
+    htmlUserPoints.innerHTML = "<p>Your Points: " + userPoints + "</p>";
+    htmlAIPoints.innerHTML = "<p>AI Points: " + AIPoints + "</p>";
     htmlTurn.innerHTML = "<p>Actual Turn: " + ((turn === "human")?"Your's":"AI") + "</p>";
     htmlWinnerIsMessage.innerHTML = "<p>Winner is: </p>";
 
@@ -83,7 +86,7 @@ window.onload = function () {
                 refreshHtmlBoard(htmlAllSquares, board);
                 if (checkWin()) {
                     winning = nick;
-                    htmlPoints.innerHTML = "<p>Your Points: " + ++userPoints + "</p>";
+                    htmlUserPoints.innerHTML = "<p>Your Points: " + ++userPoints + "</p>";
                     htmlWinnerIsMessage.innerHTML = "<p>Winner is: " + winning + " </p>";
                     turn = "";
                 }
@@ -101,7 +104,7 @@ window.onload = function () {
                 turn = "human";
                 if (checkWin()) {
                     winning = "AI";
-                    // htmlPoints.innerHTML = "<p>Your Points: " + ++userPoints + "</p>";
+                    htmlAIPoints.innerHTML = "<p>AI Points: " + ++AIPoints + "</p>";
                     htmlWinnerIsMessage.innerHTML = "<p>Winner is: " + winning + " </p>";
                     turn = "";
                 }
