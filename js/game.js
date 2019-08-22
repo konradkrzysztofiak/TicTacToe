@@ -87,7 +87,7 @@ window.onload = function () {
                     htmlWinnerIsMessage.innerHTML = "<p>Winner is: " + winning + " </p>";
                     turn = "";
                 }
-                if (checkDraw()) {
+                if (checkDraw() && turn !== "") {
                     htmlWinnerIsMessage.innerHTML = "<p> !!! DRAW !!! </p>";
                     turn = "";
                 }
@@ -105,7 +105,7 @@ window.onload = function () {
                     htmlWinnerIsMessage.innerHTML = "<p>Winner is: " + winning + " </p>";
                     turn = "";
                 }
-                if (checkDraw()) {
+                if (checkDraw() && turn !== "") {
                     htmlWinnerIsMessage.innerHTML = "<p> !!! DRAW !!! </p>";
                     turn = "";
                 }
