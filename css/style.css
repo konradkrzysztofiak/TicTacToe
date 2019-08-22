@@ -1,4 +1,5 @@
 #container{
+    position: absolute;
     display: inline-flex;
     text-align: center;
     justify-content: center;
@@ -6,10 +7,10 @@
 }
 #board{
     position: relative;
-    left: 90%;
+    left: 72%;
     top: 50%;
-    width: 306px;
-    height: 332px;
+    width: 358px;
+    height: 340px;
     background-color: #000000;
     border: 1px solid;
     display: flex;
@@ -23,7 +24,8 @@
     width: 350px;
     height: 332px;
     top: 50%;
-    left: 80%;
+    left: 65%;
+
     border: 4px dotted;
     background-color: rgba(0,0,0,0.3);
     color: floralwhite;
@@ -36,8 +38,8 @@
     margin: 1px;
     position: relative;
     display: inline-flex;
-    width: 100px;
-    height: 100px;
+    width: 117px;
+    height: 101px;
     /*min-height: 50px;*/
     /*background-color: white;*/
     background-color: rgba(255,255,255,0.5);
@@ -67,8 +69,6 @@
 body{
     margin: 0;
     background-image: url("../img/bg.png");
-    text-align: center;
-    position: absolute;
 }
 #login{
     position: relative;
