@@ -26,6 +26,21 @@ let coordinates = {
 
 
 window.onload = function () {
+    //todo how we should storage our's all players
+    var players = {
+        "adam": 1,
+        "ewa": 2,
+        "ala": 3
+    };
+    localStorage.players = JSON.stringify(players);
+
+    //todo how we get players and theirs score from local store
+    var playersFromLocalStorage = JSON.parse(localStorage.players);
+    for (var keyPlayer in playersFromLocalStorage) {
+        console.log(keyPlayer + " " + playersFromLocalStorage[keyPlayer]);
+    }
+
+    console.log("-------------------------------------------------------------------");
     // todo allHTMLs
     let htmlAllSquares = document.querySelectorAll(".square");
     let htmlDifficulty = document.querySelector("#difficultMessage");
