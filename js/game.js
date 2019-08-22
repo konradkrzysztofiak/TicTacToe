@@ -2,7 +2,7 @@ let difficultMap = new Map([[1, "Easy"], [2, "Medium"], [3, "Hard"]]);
 let nick = localStorage.nick;
 let difficulty = localStorage.difficulty; //todo 0 random 1 smarter 2 the smartest
 let userSign = localStorage.sign;
-let userPoints; //todo ----> We need write this in JSON <----
+let userPoints = 0; //todo ----> We need write this in JSON <----
 let turn = true;   //todo true human, false AI
 let gameInProgress = true;
 let winning = "";
@@ -36,7 +36,7 @@ window.onload = function () {
     htmlYourSign.innerHTML = "<p>Your sign: " + localStorage.sign + "</p>";
     document.querySelector("#welcomeMessage").innerHTML = "<p>Hello " + nick + " Let's play !</p>";
     htmlDifficulty.innerHTML = "<p>Difficulty level: " + difficulty + "</p>";
-    htmlPoints.innerHTML = "<p>Your Points: 0</p>";
+    htmlPoints.innerHTML = "<p>Your Points: " + userPoints + "</p>";
     htmlTurn.innerHTML = "<p>Actual Turn: Ai</p>";
 
     //todo allListeners
@@ -58,6 +58,7 @@ window.onload = function () {
             if (checkWin()) {
                 gameInProgress = false;
                 winning = nick;
+                htmlPoints.innerHTML = "<p>Your Points: " + userPoints++ + "</p>";
             }
         }
         checkStateOfGame(htmlAllSquares);
