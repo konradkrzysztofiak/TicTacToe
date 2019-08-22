@@ -63,7 +63,6 @@ window.onload = function () {
                 checkStateOfGame(htmlAllSquares);
 
                 runAi(getValueFromMap(difficultMap, localStorage.difficulty));
-                console.log(board);
             }
 
         };
@@ -121,25 +120,29 @@ function turnAIDummy(htmlAllSquares) {
 function turnAiHard(htmlAllSquares) {
 
 
-
-
     while (true) {
 
         for (let i = 0; i < startingPos.length; i++) {
-            if (!firstMoveOfHardAi && !turn) {
-                if (board[coordinates[startingPos[i]][0]][coordinates[startingPos[i]][1]] === " ") {
-                    startHardAiPos = startingPos[i];
-                    board[coordinates[startHardAiPos][0]][coordinates[startHardAiPos][1]] = (userSign === "X") ? "O" : "X";
-                    firstMoveOfHardAi = true;
+            if (!turn) {
+                console.log("hello");
+                if (!firstMoveOfHardAi) {
+                    console.log("hello");
+                    if (board[coordinates[startingPos[i]][0]][coordinates[startingPos[i]][1]] === " ") {
+                        startHardAiPos = startingPos[i];
+
+                        board[coordinates[startHardAiPos][0]][coordinates[startHardAiPos][1]] = (userSign === "X") ? "O" : "X";
+                        firstMoveOfHardAi = true;
+                        turn = true;
+                        break;
+                    }
+                } else {
+                    blockPlayerMoveHorizontal();
+                    blockPlayerMoveDiagonal();
+                    moveHorizontal();
+                    refreshHtmlBoard(htmlAllSquares, board);
                     turn = true;
                     break;
                 }
-            } else {
-                blockPlayerMoveHorizontal();
-                checkHorizontalMove(htmlAllSquares);
-                refreshHtmlBoard(htmlAllSquares, board);
-                turn = true;
-                break;
             }
         }
         break;
@@ -155,38 +158,101 @@ function turnAiHard(htmlAllSquares) {
     turn = true;
 }
 
-function checkHorizontalMove(htmlAllSquares) {
+function moveHorizontal() {
     if (!turn) {
-        console.log(startHardAiPos);
+        console.log("moveHorizontal");
         startHardAiPos = startHardAiPos + 3;
-        console.log(coordinates[startHardAiPos]);
         if (board[coordinates[startHardAiPos][0]][coordinates[startHardAiPos][1]] === " ") {
             board[coordinates[startHardAiPos][0]][coordinates[startHardAiPos][1]] = (userSign === "X") ? "O" : "X";
             turn = true;
         } else {
             firstMoveOfHardAi = false;
-            turnAiHard(htmlAllSquares);
         }
     }
 }
 
 function blockPlayerMoveHorizontal() {
-    for (let i = 0; i < board.length; i++) {
-        for (let j = 0; j < board.length; j++) {
-            if (board[j][i] === userSign || board[j][i] === " ") {
-                if (j < 1) {
-                    if (board[j][i] === userSign && board[j + 1][i] === userSign) {
-                        board[j+2][i] = "O";
-                    }
-                } else if (j < 2) {
-                    if (board[j][i] === userSign && board[j + 1][i] === userSign){
-                        board[j-1][i] = "O";
-                    }
 
+    if (!turn) {
+        console.log("blockHorizontal");
+        for (let i = 0; i < board.length; i++) {
+            for (let j = 0; j < board.length; j++) {
+                if (board[j][i] === userSign || board[j][i] === " ") {
+                    if (j < 1) {
+                        if (board[j][i] === userSign && board[j + 1][i] === userSign && board[j + 2][i] === " ") {
+                            board[j + 2][i] = "O";
+                            turn = true;
+                        }
+                    } else if (j < 2) {
+                        if (board[j][i] === userSign && board[j + 1][i] === userSign && board[j - 1][i] === " ") {
+                            board[j - 1][i] = "O";
+                            turn = true;
+                        }
+
+                    }
+                } else {
+                    firstMoveOfHardAi = false;
                 }
             }
         }
     }
+}
+
+function blockPlayerMoveDiagonal() {
+
+
+    if (!turn && checkPlayerMoveDiagonal()) {
+        console.log("blockDiagonal");
+        for (let i = 0; i < board.length; i++) {
+            for (let j = 0; j < board.length; j++) {
+                if (board[j][i] === userSign) {
+                    if (j < 1) {
+                        if (board[j][i] === userSign && board[j + 1][i + 1] === userSign) {
+                            board[j + 2][i + 2] = "O";
+                            turn = true;
+                        } else if (board[j][i] === userSign && board[j + 2][i - 1] === userSign) {
+                            board[j + 2][i - 2] = "O";
+                            turn = true;
+                        }
+                    } else if (j < 2) {
+                        if (board[j][i] === userSign && board[j + 1][i - 1] === userSign && board[j - 1][i + 1] === " ") {
+                            board[j - 1][i + 1] = "O";
+                            turn = true;
+                        } else if (board[j][i] === userSign && board[j + 1][i - 1] === userSign && board[j - 1][i + 1] === " ") {
+                            board[j - 1][i + 1] = "O";
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+function checkPlayerMoveDiagonal() {
+    if (!turn) {
+        for (let i = 0; i < board.length; i++) {
+            for (let j = 0; j < board.length; j++) {
+                if (board[j][i] === userSign) {
+                    if (j < 1) {
+                        if (board[j][i] === userSign && board[j + 1][i + 1] === userSign && board[j + 2][i + 2] === " ") {
+                            return true;
+                        } else if (board[j][i] === userSign && board[j + 2][i - 1] === userSign && board[j + 2][i - 2] === " ") {
+                            return true;
+                        }
+                    } else if (j < 2) {
+
+                        if (board[j][i] === userSign && board[j + 1][i - 1] === userSign && board[j - 1][i + 1] === " ") {
+                            return true;
+                        } else if (board[j][i] === userSign && board[j - 1][i + 1] === userSign && board[j - 2][i + 2] === " ") {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
 }
 
 function checkStateOfGame(htmlAllSquares) {
