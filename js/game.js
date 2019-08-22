@@ -1,6 +1,6 @@
-let difficultMap = new Map([[1, "Easy"], [2, "Medium"], [3, "Hard"]]);
+let difficultMap = new Map([[1, "easy"], [2, "medium"], [3, "hard"]]);
 let nick = localStorage.nick;
-let difficulty = localStorage.difficulty; //todo 0 random 1 smarter 2 the smartest
+let difficulty = localStorage.difficulty; //todo 1 random 2 smarter 3 the smartest
 let userSign = localStorage.sign;
 let userPoints = 0; //todo ----> We need write this in JSON <----
 let turn = true;   //todo true human, false AI
@@ -33,12 +33,10 @@ window.onload = function () {
     let htmlYourSign = document.querySelector("#chooseSignMessage");
     let htmlPoints = document.querySelector("#points");
     let htmlTurn = document.querySelector("#turn");
-    htmlYourSign.innerHTML = "<p>Your sign: " + localStorage.sign + "</p>";
-    document.querySelector("#welcomeMessage").innerHTML = "<p>Hello " + nick + " Let's play !</p>";
-    htmlDifficulty.innerHTML = "<p>Difficulty level: " + difficulty + "</p>";
-    htmlPoints.innerHTML = "<p>Your Points: " + userPoints + "</p>";
-    htmlTurn.innerHTML = "<p>Actual Turn: Ai</p>";
+    let htmlWelcomeMessage = document.querySelector("#welcomeMessage");
 
+    initPlayerInfoBox();
+    console.log(getValueFromMap(difficultMap,localStorage.difficulty));
     //todo allListeners
     document.querySelector("#btnReset").addEventListener("click", function () {
         resetBoard();
@@ -46,15 +44,12 @@ window.onload = function () {
         gameInProgress = true;
     });
 
-    refreshHtmlBoard(htmlAllSquares, board);
 
     //todo init
     for (let i = 0; i < htmlAllSquares.length; i++) {
         htmlAllSquares[i].onclick = function () {
-
         if (gameInProgress && turn) {
             putMarkerOnBoard(coordinates[this.id], userSign);
-
             refreshHtmlBoard(htmlAllSquares, board);
             if (checkWin()) {
                 gameInProgress = false;
@@ -63,18 +58,43 @@ window.onload = function () {
             }
         }
         checkStateOfGame(htmlAllSquares);
+        runAi(getValueFromMap(difficultMap,localStorage.difficulty));
 
+    };
+    console.log("End of window.onload");
 
-        //todo AI easy part
+    function runAi(difficulty) {
         if (gameInProgress && !turn) {
-            turnAIDummy(htmlAllSquares);
+            if (difficulty === 1) {
+                turnAIDummy(htmlAllSquares);
+            } else if (difficulty === 2){
+                //todo medium
+            } else if (difficulty === 3) {
+                //todo hard
+            }
         }
         checkStateOfGame(htmlAllSquares);
         //todo END One round
-        };
+    };
     }
-    console.log("End of window.onload");
+
+    function initPlayerInfoBox() {
+        htmlYourSign.innerHTML = "<p>Your sign: " + localStorage.sign + "</p>";
+        htmlWelcomeMessage.innerHTML = "<p>Hello " + nick + " Let's play !</p>";
+        htmlDifficulty.innerHTML = "<p>Difficulty level: " + difficulty + "</p>";
+        htmlPoints.innerHTML = "<p>Your Points: " + userPoints + "</p>";
+        htmlTurn.innerHTML = "<p>Actual Turn: Ai</p>";
+    }
+
+    function getValueFromMap(map, data) {
+        for (let [key, value] of map.entries()) {
+            if (value === data)
+                return key;
+        }
+    }
 };
+
+
 
 function turnAIDummy(htmlAllSquares) {
     while (true) {
