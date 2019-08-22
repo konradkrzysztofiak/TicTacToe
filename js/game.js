@@ -11,11 +11,7 @@ let board = [
     [" ", " ", " "],
     [" ", " ", " "],
 ];
-// let freshBoard = [
-//     [" ", " ", " "],
-//     [" ", " ", " "],
-//     [" ", " ", " "],
-// ];
+
 
 let coordinates = {
     1: [0, 0],
@@ -55,15 +51,6 @@ window.onload = function () {
     //todo init
     for (let i = 0; i < htmlAllSquares.length; i++) {
         htmlAllSquares[i].onclick = function () {
-            // if (htmlAllSquares[i].querySelector("p").innerHTML === " ") {
-            // console.log("--------------------------------------------------");
-            // console.log(gameInProgress + " <------gameInProgress");
-            // console.log(winning + " <------winning");
-            // console.log(checkIfBoardFull() + " <------checkIfBoardFull()");
-            // console.log("--------------------------------------------------");
-
-
-
                 //todo Human part
                 if (gameInProgress) {
                     putMarkerOnBoard(coordinates[this.id], userSign);
@@ -71,14 +58,9 @@ window.onload = function () {
                     if (checkWin()) {
                         gameInProgress = false;
                         winning = nick;
-                        // setTimeout(function () {
-                        //     alert(localStorage.nick + "WON !!!");
-                        // }, 300);
                     }
                 }
 
-
-                // console.log(checkIfBoardFull() + " <-------checkIfBoardFull()");
                 if (!gameInProgress || checkIfBoardFull()) {
                     console.log((winning !== "")? "winn" + winning: " REMISS  ");
                     winning = "";
@@ -105,28 +87,23 @@ window.onload = function () {
                     if (checkWin()) {
                         gameInProgress = false;
                         winning = "AI dummy";
-                        // setTimeout(function () {
-                        //     alert("AI WON !!!");
-                        // }, 300);
                     }
                 }
 
 
-            //todo check state of game part
+                //todo check state of game part
 
-            // console.log(checkIfBoardFull() + " <-------checkIfBoardFull()");
-            if (!gameInProgress || checkIfBoardFull()) {
-                    console.log((winning !== "")? "winn" + winning: " REMISS  ");
-                    winning = "";
-                    gameInProgress = true;
-                    resetBoard();
-                    setTimeout(function () {
-                        refreshHtmlBoard(htmlAllSquares, board);
-                    }, 1000);
-                }
-                console.log("<--------- END One round");
-                //todo END One round
-            // }
+                if (!gameInProgress || checkIfBoardFull()) {
+                        console.log((winning !== "")? "winn" + winning: " REMISS  ");
+                        winning = "";
+                        gameInProgress = true;
+                        resetBoard();
+                        setTimeout(function () {
+                            refreshHtmlBoard(htmlAllSquares, board);
+                        }, 1000);
+                    }
+                    console.log("<--------- END One round");
+                    //todo END One round
         };
     }
     console.log("End of window.onload");
