@@ -2,11 +2,10 @@ window.onload = function () {
     let btnLogin = document.querySelector(".login-btn");
     let nick = document.querySelector("#nick");
     let newGame = document.querySelector("#newGame");
+    let createNewGameBtn = document.getElementById("createNewGame");
+
     btnLogin.addEventListener('click', function () {
-        console.log("test  " + nick.value);
         localStorage.nick = nick.value;
-        console.log(localStorage.nick);
-        // passNick(nick);;
     });
 
     document.getElementById('difficulty').onclick = function () {
@@ -20,15 +19,18 @@ window.onload = function () {
     };
 
     newGame.addEventListener('click', function () {
-        console.log(document.getElementById("createNewGame").style.display);
-        if (document.getElementById("createNewGame").style.display === "none" ||
-            document.getElementById("createNewGame").style.display === "") {
-            document.getElementById("createNewGame").style.display = "block";
+        showHide(createNewGameBtn);
+    });
+
+    function showHide(divId) {
+        if (divId.style.display === "none" ||
+            divId.style.display === "") {
+            divId.style.display = "block";
         } else {
-            document.getElementById("createNewGame").style.display = "none"
+            divId.style.display = "none";
         }
 
-    });
+    }
 
     function getRadioValue(form, name) {
         let value;
@@ -45,10 +47,3 @@ window.onload = function () {
 
 
 };
-
-
-// function passNick(nick) {
-//     if (/^[A-Za-z0-9]{1,10}$/.test(nick.value)) {
-//         localStorage.nick = nick.value;
-//     }
-// }
