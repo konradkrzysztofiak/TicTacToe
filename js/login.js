@@ -20,7 +20,9 @@ window.onload = function () {
     };
 
     newGame.addEventListener('click', function () {
-        if (document.getElementById("createNewGame").style.display === "none") {
+        console.log(document.getElementById("createNewGame").style.display);
+        if (document.getElementById("createNewGame").style.display === "none" ||
+            document.getElementById("createNewGame").style.display === "") {
             document.getElementById("createNewGame").style.display = "block";
         } else {
             document.getElementById("createNewGame").style.display = "none"
