@@ -42,7 +42,7 @@ window.onload = function () {
     //todo allListeners
     document.querySelector("#btnReset").addEventListener("click", function () {
         resetBoard();
-        refreshHtmlBoard(htmlAllSquares, freshBoard);
+        refreshHtmlBoard(htmlAllSquares, board);
         gameInProgress = true;
     });
 
@@ -51,9 +51,10 @@ window.onload = function () {
     //todo init
     for (let i = 0; i < htmlAllSquares.length; i++) {
         htmlAllSquares[i].onclick = function () {
-        //todo Human part
+
         if (gameInProgress && turn) {
             putMarkerOnBoard(coordinates[this.id], userSign);
+
             refreshHtmlBoard(htmlAllSquares, board);
             if (checkWin()) {
                 gameInProgress = false;
@@ -95,13 +96,13 @@ function turnAIDummy(htmlAllSquares) {
 
 function checkStateOfGame(htmlAllSquares) {
     if (!gameInProgress || checkIfBoardFull()) {
-        console.log((winning !== "") ? "winn" + winning : " REMISS  ");
         winning = "";
-        gameInProgress = true;
-        resetBoard();
-        setTimeout(function () {
+        refreshHtmlBoard(htmlAllSquares, board);
+        gameInProgress = false;
+        if (winning === "") {
             refreshHtmlBoard(htmlAllSquares, board);
-        }, 1000);
+        }
+
     }
 }
 
@@ -123,6 +124,7 @@ function resetBoard() {
             board[y][x] = " ";
         }
     }
+    turn = true;
 }
 
 function refreshHtmlBoard(htmlSquares, bordIn) {
@@ -134,27 +136,6 @@ function refreshHtmlBoard(htmlSquares, bordIn) {
     }
 }
 
-function increaseDifficulty(htmlIncrease) {
-    if (difficulty < 3 && difficulty++) {
-        htmlIncrease.innerHTML = "<p>Difficulty: " + difficultMap.get(difficulty) + "</p>";
-    }
-}
-
-function decreaseDifficulty(htmlIncrease) {
-    if (difficulty > 1 && difficulty--) {
-        htmlIncrease.innerHTML = "<p>Difficulty: " + difficultMap.get(difficulty) + "</p>";
-    }
-}
-
-function setUserSignX(htmlYourSign) {
-    userSign = "X";
-    htmlYourSign.innerHTML = "<p>Your sign: " + userSign + "</p>";
-}
-
-function setUserSignO(htmlYourSign) {
-    userSign = "O";
-    htmlYourSign.innerHTML = "<p>Your sign: " + userSign + "</p>";
-}
 
 function putMarkerOnBoard(coordinates, value) {
     if (board[coordinates[0]][coordinates[1]] === " ") {
