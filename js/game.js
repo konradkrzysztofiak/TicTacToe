@@ -4,7 +4,6 @@ let difficulty = localStorage.difficulty; //todo 0 random 1 smarter 2 the smarte
 let userSign = localStorage.sign;
 let userPoints = 0; //todo ----> We need write this in JSON <----
 let turn = "human";   //todo <--- I had to change this ....>
-let gameInProgress = true;
 let winning = "";
 let board = [
     [" ", " ", " "],
@@ -26,31 +25,28 @@ let coordinates = {
 
 
 window.onload = function () {
-    //todo how we should storage our's all players
-    var players = [
-        {playerName: "Adam0", score: 6666},
-        {playerName: "Adam1", score: 3},
-        {playerName: "Adam666", score: 4},
-        {playerName: "Adam3", score: 2},
-        {playerName: "Adam4", score: 1}
-    ];
+    // //todo how we should storage our's all players
+    // var players = [
+    //     {playerName: "Adam0", score: 6666},
+    //     {playerName: "Adam1", score: 3},
+    //     {playerName: "Adam666", score: 4},
+    //     {playerName: "Adam3", score: 2},
+    //     {playerName: "Adam4", score: 1}
+    // ];
+    // function compare(a, b) {
+    //     return b.score - a.score;
+    // }
+    // players.sort(compare);
+    // localStorage.players = JSON.stringify(players);
+    // //todo how we get players and theirs score from local store
+    // var playersFromLocalStorage = JSON.parse(localStorage.players);
+    // for (let i = 0; i < playersFromLocalStorage.length; i++) {
+    //     console.log(playersFromLocalStorage[i].playerName + " " + playersFromLocalStorage[i].score);
+    // }
+    // console.log("-------------------------------------------------------------------");
 
-    function compare(a, b) {
-        return b.score - a.score;
-    }
-
-    players.sort(compare);
-    localStorage.players = JSON.stringify(players);
 
 
-
-    //todo how we get players and theirs score from local store
-    var playersFromLocalStorage = JSON.parse(localStorage.players);
-    for (let i = 0; i < playersFromLocalStorage.length; i++) {
-        console.log(playersFromLocalStorage[i].playerName + " " + playersFromLocalStorage[i].score);
-    }
-
-    console.log("-------------------------------------------------------------------");
     // todo allHTMLs
     let htmlAllSquares = document.querySelectorAll(".square");
     let htmlDifficulty = document.querySelector("#difficultMessage");
@@ -68,40 +64,53 @@ window.onload = function () {
     //todo allListeners
     document.querySelector("#btnReset").addEventListener("click", function () {
         resetBoard();
-        refreshHtmlBoard(htmlAllSquares, freshBoard);
-        gameInProgress = true;
+        refreshHtmlBoard(htmlAllSquares, board);
+        turn = "human"; //todo <--- make this random !!!
     });
     document.querySelector("#btcPlayAgain").addEventListener("click", function () {
-        console.log("test \"btcPlayAgain\"");
+        resetBoard();
+        refreshHtmlBoard(htmlAllSquares, board);
         turn = "human"; //todo <--- make this random !!!
-        gameInProgress = true;
     });
 
-    // refreshHtmlBoard(htmlAllSquares, board);
 
     //todo init
     for (let i = 0; i < htmlAllSquares.length; i++) {
         htmlAllSquares[i].onclick = function () {
-        //todo Human part
-        if (gameInProgress && turn === "human") {
-            putMarkerOnBoard(coordinates[this.id], userSign);
-            refreshHtmlBoard(htmlAllSquares, board);
-            if (checkWin()) {
-                gameInProgress = false;
-                winning = nick;
-                htmlPoints.innerHTML = "<p>Your Points: " + ++userPoints + "</p>";
+            //todo Human part
+            if (turn === "human") {
+                turn = (putMarkerOnBoard(coordinates[this.id], userSign)) ? "AI" : "human";
+                refreshHtmlBoard(htmlAllSquares, board);
+                if (checkWin()) {
+                    winning = nick;
+                    htmlPoints.innerHTML = "<p>Your Points: " + ++userPoints + "</p>";
+                    htmlWinnerIsMessage.innerHTML = "<p>Winner is: " + winning + " </p>";
+                    turn = "";
+                }
+                if (checkDraw()) {
+                    htmlWinnerIsMessage.innerHTML = "<p> !!! DRAW !!! </p>";
+                    turn = "";
+                }
             }
-            checkStateOfGame(htmlAllSquares, htmlWinnerIsMessage);
-            turn = "AI";
-        }
 
 
-        //todo AI easy part
-        if (gameInProgress && turn === "AI") {
-            turnAIDummy(htmlAllSquares);
-            checkStateOfGame(htmlAllSquares, htmlWinnerIsMessage);
-        }
-        //todo END One round
+            //todo AI easy part
+            if (turn === "AI") {
+                turnAIDummy(htmlAllSquares);
+                refreshHtmlBoard(htmlAllSquares, board);
+                turn = "human";
+                if (checkWin()) {
+                    winning = "AI";
+                    // htmlPoints.innerHTML = "<p>Your Points: " + ++userPoints + "</p>";
+                    htmlWinnerIsMessage.innerHTML = "<p>Winner is: " + winning + " </p>";
+                    turn = "";
+                }
+                if (checkDraw()) {
+                    htmlWinnerIsMessage.innerHTML = "<p> !!! DRAW !!! </p>";
+                    turn = "";
+                }
+            }
+            //todo END One round
         };
     }
     console.log("End of window.onload");
@@ -116,44 +125,9 @@ function turnAIDummy(htmlAllSquares) {
             break;
         }
     }
-    refreshHtmlBoard(htmlAllSquares, board);
-    if (checkWin()) {
-        gameInProgress = false;
-        winning = "AI dummy";
-    }
-    turn = "human";
 }
 
-function checkStateOfGame(htmlAllSquares, htmlWinnerIsMessage) {
-    if (!gameInProgress || checkIfBoardFull()) {
-        if (winning === "") {
-            htmlWinnerIsMessage.innerHTML = "<p> !!! DRAW !!! </p>";
-            // setTimeout(function () {
-            //     alert("Remiss !!!");
-            // }, 500);
-
-        } else {
-            htmlWinnerIsMessage.innerHTML = "<p>Winner is: " + winning + " </p>";
-            // let temporaryMessage = "Winner is " + winning + " !!!";
-            // setTimeout(function () {
-            //     alert(temporaryMessage);
-            // }, 500);
-        }
-        winning = "";
-        turn = "";
-        resetBoard();
-        gameInProgress = false;
-        setTimeout(function () {
-            // winning = "";
-            // turn = "";
-            // resetBoard();
-            // gameInProgress = true;
-            refreshHtmlBoard(htmlAllSquares, board);
-        }, 1000);
-    }
-}
-
-function checkIfBoardFull() {
+function checkDraw() {
     for (let y = 0; y < 3; y++) {
         for (let x = 0; x < 3; x++) {
             if (board[y][x] === " ") {
@@ -186,9 +160,9 @@ function refreshHtmlBoard(htmlSquares, bordIn) {
 function putMarkerOnBoard(coordinates, value) {
     if (board[coordinates[0]][coordinates[1]] === " ") {
         board[coordinates[0]][coordinates[1]] = value;
-        turn = (turn === "human") ? "AI" : "human";
-        // turn = !turn;
+        return true;
     }
+    return false;
 }
 
 function checkWin() {
