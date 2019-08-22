@@ -1,6 +1,6 @@
 let difficultMap = new Map([[1, "Easy"], [2, "Medium"], [3, "Hard"]]);
 let userSign = localStorage.sign;
-let turn = true;   //todo true human, false AI
+let turn = true;   //todo true human, false AI 
 let difficulty = localStorage.difficulty; //todo 0 random 1 smarter 2 the smartest
 let gameInProgress = true;
 let board = [
