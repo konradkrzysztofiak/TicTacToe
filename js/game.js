@@ -5,6 +5,8 @@ let userSign = localStorage.sign;
 let userPoints = 0; //todo ----> We need write this in JSON <----
 let turn = true;   //todo true human, false AI
 let gameInProgress = true;
+let firstMoveOfHardAi = false;
+let startHardAiPos;
 let winning = "";
 let board = [
     [" ", " ", " "],
@@ -36,7 +38,6 @@ window.onload = function () {
     let htmlWelcomeMessage = document.querySelector("#welcomeMessage");
 
     initPlayerInfoBox();
-    console.log(getValueFromMap(difficultMap,localStorage.difficulty));
     //todo allListeners
     document.querySelector("#btnReset").addEventListener("click", function () {
         resetBoard();
@@ -48,34 +49,38 @@ window.onload = function () {
     //todo init
     for (let i = 0; i < htmlAllSquares.length; i++) {
         htmlAllSquares[i].onclick = function () {
-        if (gameInProgress && turn) {
-            putMarkerOnBoard(coordinates[this.id], userSign);
-            refreshHtmlBoard(htmlAllSquares, board);
-            if (checkWin()) {
-                gameInProgress = false;
-                winning = nick;
-                htmlPoints.innerHTML = "<p>Your Points: " + userPoints++ + "</p>";
+            if (gameInProgress && turn) {
+                putMarkerOnBoard(coordinates[this.id], userSign);
+                refreshHtmlBoard(htmlAllSquares, board);
+                if (checkWin()) {
+                    gameInProgress = false;
+                    winning = nick;
+                    htmlPoints.innerHTML = "<p>Your Points: " + userPoints++ + "</p>";
+                }
             }
-        }
-        checkStateOfGame(htmlAllSquares);
-        runAi(getValueFromMap(difficultMap,localStorage.difficulty));
+            if (gameInProgress) {
+                checkStateOfGame(htmlAllSquares);
 
-    };
-    console.log("End of window.onload");
+                runAi(getValueFromMap(difficultMap, localStorage.difficulty));
+                console.log(board);
+            }
+
+        };
+        console.log("End of window.onload");
+    }
 
     function runAi(difficulty) {
         if (gameInProgress && !turn) {
             if (difficulty === 1) {
                 turnAIDummy(htmlAllSquares);
-            } else if (difficulty === 2){
+            } else if (difficulty === 2) {
                 //todo medium
             } else if (difficulty === 3) {
-                //todo hard
+                turnAiHard(htmlAllSquares);
             }
         }
-        checkStateOfGame(htmlAllSquares);
+
         //todo END One round
-    };
     }
 
     function initPlayerInfoBox() {
@@ -85,16 +90,14 @@ window.onload = function () {
         htmlPoints.innerHTML = "<p>Your Points: " + userPoints + "</p>";
         htmlTurn.innerHTML = "<p>Actual Turn: Ai</p>";
     }
-
-    function getValueFromMap(map, data) {
-        for (let [key, value] of map.entries()) {
-            if (value === data)
-                return key;
-        }
-    }
 };
 
-
+function getValueFromMap(map, data) {
+    for (let [key, value] of map.entries()) {
+        if (value === data)
+            return key;
+    }
+}
 
 function turnAIDummy(htmlAllSquares) {
     while (true) {
@@ -111,6 +114,66 @@ function turnAIDummy(htmlAllSquares) {
         winning = "AI dummy";
     }
     turn = true;
+
+}
+
+function turnAiHard(htmlAllSquares) {
+
+    let startingPos = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+
+
+    while (true) {
+
+        for (let i = 0; i < startingPos.length; i++) {
+            if (!firstMoveOfHardAi && !turn) {
+                if (board[coordinates[startingPos[i]][0]][coordinates[startingPos[i]][1]] === " ") {
+                    startHardAiPos = startingPos[i];
+                    board[coordinates[startHardAiPos][0]][coordinates[startHardAiPos][1]] = (userSign === "X") ? "O" : "X";
+                    firstMoveOfHardAi = true;
+                    //console.log(startHardAiPos);
+                    turn = true;
+                    break;
+                }
+            } else {
+
+                checkHorizontalMove(htmlAllSquares);
+                refreshHtmlBoard(htmlAllSquares, board);
+                turn = true;
+                break;
+            }
+        }
+        break;
+
+
+        // if (board[y][x] === " ") {
+        //     board[y][x] = (userSign === "X") ? "O" : "X";
+        //     break;
+        // }
+
+    }
+
+    //putMarkerOnBoard(coordinates[this.id], userSign);
+    refreshHtmlBoard(htmlAllSquares, board);
+    if (checkWin()) {
+        gameInProgress = false;
+        winning = "AI dummy";
+    }
+    turn = true;
+}
+
+function checkHorizontalMove(htmlAllSquares) {
+    console.log(startHardAiPos);
+    startHardAiPos = startHardAiPos + 3;
+    console.log(coordinates[startHardAiPos]);
+    if (board[coordinates[startHardAiPos][0]][coordinates[startHardAiPos][1]] === " ") {
+        board[coordinates[startHardAiPos][0]][coordinates[startHardAiPos][1]] = (userSign === "X") ? "O" : "X";
+        turn = true;
+    } else {
+        firstMoveOfHardAi = false;
+        turnAiHard(htmlAllSquares);
+
+    }
+
 
 }
 
