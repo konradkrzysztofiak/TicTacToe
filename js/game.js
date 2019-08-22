@@ -1,18 +1,21 @@
 let difficultMap = new Map([[1, "Easy"], [2, "Medium"], [3, "Hard"]]);
-let userSign = localStorage.sign;
-let turn = true;   //todo true human, false AI 
+let nick = localStorage.nick;
 let difficulty = localStorage.difficulty; //todo 0 random 1 smarter 2 the smartest
+let userSign = localStorage.sign;
+let userPoints; //todo ----> We need write this in JSON <----
+let turn = true;   //todo true human, false AI
 let gameInProgress = true;
+let winning = "";
 let board = [
     [" ", " ", " "],
     [" ", " ", " "],
     [" ", " ", " "],
 ];
-let freshBoard = [
-    [" ", " ", " "],
-    [" ", " ", " "],
-    [" ", " ", " "],
-];
+// let freshBoard = [
+//     [" ", " ", " "],
+//     [" ", " ", " "],
+//     [" ", " ", " "],
+// ];
 
 let coordinates = {
     1: [0, 0],
@@ -35,48 +38,59 @@ window.onload = function () {
     let htmlPoints = document.querySelector("#points");
     let htmlTurn = document.querySelector("#turn");
     htmlYourSign.innerHTML = "<p>Your sign: " + localStorage.sign + "</p>";
-    document.querySelector("#welcomeMessage").innerHTML = "<p>Hello " + localStorage.nick + " Let's play !</p>";
+    document.querySelector("#welcomeMessage").innerHTML = "<p>Hello " + nick + " Let's play !</p>";
     htmlDifficulty.innerHTML = "<p>Difficulty level: " + difficulty + "</p>";
     htmlPoints.innerHTML = "<p>Your Points: 0</p>";
     htmlTurn.innerHTML = "<p>Actual Turn: Ai</p>";
 
     //todo allListeners
-
-    // document.querySelector("#btc-increase").addEventListener("click", function () {
-    //     increaseDifficulty(htmlDifficulty);
-    // });
-    // document.querySelector("#btc-decrease").addEventListener("click", function () {
-    //     decreaseDifficulty(htmlDifficulty);
-    // });
     document.querySelector("#btnReset").addEventListener("click", function () {
         resetBoard();
         refreshHtmlBoard(htmlAllSquares, freshBoard);
-        gameInProgress = turn;
+        gameInProgress = true;
     });
-    // document.querySelector("#btc-chooseSignX").addEventListener("click", function () {
-    //     setUserSignX(htmlYourSign);
-    // });
-    // document.querySelector("#btc-chooseSignO").addEventListener("click", function () {
-    //     setUserSignO(htmlYourSign);
-    // });
 
-    refreshHtmlBoard(htmlAllSquares, freshBoard);
+    refreshHtmlBoard(htmlAllSquares, board);
 
     //todo init
     for (let i = 0; i < htmlAllSquares.length; i++) {
         htmlAllSquares[i].onclick = function () {
-            if (htmlAllSquares[i].querySelector("p").innerHTML === " ") {
+            // if (htmlAllSquares[i].querySelector("p").innerHTML === " ") {
+            // console.log("--------------------------------------------------");
+            // console.log(gameInProgress + " <------gameInProgress");
+            // console.log(winning + " <------winning");
+            // console.log(checkIfBoardFull() + " <------checkIfBoardFull()");
+            // console.log("--------------------------------------------------");
+
+
+
                 //todo Human part
                 if (gameInProgress) {
                     putMarkerOnBoard(coordinates[this.id], userSign);
                     refreshHtmlBoard(htmlAllSquares, board);
                     if (checkWin()) {
                         gameInProgress = false;
-                        setTimeout(function () {
-                            alert(localStorage.nick + "WON !!!");
-                        }, 300);
+                        winning = nick;
+                        // setTimeout(function () {
+                        //     alert(localStorage.nick + "WON !!!");
+                        // }, 300);
                     }
                 }
+
+
+                // console.log(checkIfBoardFull() + " <-------checkIfBoardFull()");
+                if (!gameInProgress || checkIfBoardFull()) {
+                    console.log((winning !== "")? "winn" + winning: " REMISS  ");
+                    winning = "";
+                    gameInProgress = true;
+                    resetBoard();
+                    setTimeout(function () {
+                        refreshHtmlBoard(htmlAllSquares, board);
+                    }, 1000);
+                }
+
+
+
                 //todo AI easy part
                 if (gameInProgress) {
                     while (true) {
@@ -90,18 +104,49 @@ window.onload = function () {
                     refreshHtmlBoard(htmlAllSquares, board);
                     if (checkWin()) {
                         gameInProgress = false;
-                        setTimeout(function () {
-                            alert("AI WON !!!");
-                        }, 300);
+                        winning = "AI dummy";
+                        // setTimeout(function () {
+                        //     alert("AI WON !!!");
+                        // }, 300);
                     }
                 }
+
+
+            //todo check state of game part
+
+            // console.log(checkIfBoardFull() + " <-------checkIfBoardFull()");
+            if (!gameInProgress || checkIfBoardFull()) {
+                    console.log((winning !== "")? "winn" + winning: " REMISS  ");
+                    winning = "";
+                    gameInProgress = true;
+                    resetBoard();
+                    setTimeout(function () {
+                        refreshHtmlBoard(htmlAllSquares, board);
+                    }, 1000);
+                }
+                console.log("<--------- END One round");
                 //todo END One round
-            }
+            // }
         };
     }
+    console.log("End of window.onload");
 };
 
+function checkIfBoardFull() {
+    for (let y = 0; y < 3; y++) {
+        for (let x = 0; x < 3; x++) {
+            console.log(board[y][x] + " <---------board[y][x]");
+            if (board[y][x] === " ") {
+                console.log(" return false <------------");
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
 function resetBoard() {
+    // board = freshBoard;
     for (let y = 0; y < 3; y++) {
         for (let x = 0; x < 3; x++) {
             board[y][x] = " ";
