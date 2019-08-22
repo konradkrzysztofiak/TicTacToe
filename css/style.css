@@ -42,6 +42,15 @@
     }
 }
 
+@media (max-width:800px){
+    #board {
+        left: 30%;
+    }
+    #playerInfo{
+        display: none;
+    }
+}
+
 
 
 #board .square {
