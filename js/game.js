@@ -7,6 +7,7 @@ let turn = true;   //todo true human, false AI
 let gameInProgress = true;
 let firstMoveOfHardAi = false;
 let startHardAiPos;
+let startingPos = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 let winning = "";
 let board = [
     [" ", " ", " "],
@@ -119,7 +120,7 @@ function turnAIDummy(htmlAllSquares) {
 
 function turnAiHard(htmlAllSquares) {
 
-    let startingPos = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+
 
 
     while (true) {
@@ -130,12 +131,11 @@ function turnAiHard(htmlAllSquares) {
                     startHardAiPos = startingPos[i];
                     board[coordinates[startHardAiPos][0]][coordinates[startHardAiPos][1]] = (userSign === "X") ? "O" : "X";
                     firstMoveOfHardAi = true;
-                    //console.log(startHardAiPos);
                     turn = true;
                     break;
                 }
             } else {
-
+                blockPlayerMoveHorizontal();
                 checkHorizontalMove(htmlAllSquares);
                 refreshHtmlBoard(htmlAllSquares, board);
                 turn = true;
@@ -145,36 +145,48 @@ function turnAiHard(htmlAllSquares) {
         break;
 
 
-        // if (board[y][x] === " ") {
-        //     board[y][x] = (userSign === "X") ? "O" : "X";
-        //     break;
-        // }
-
     }
 
-    //putMarkerOnBoard(coordinates[this.id], userSign);
     refreshHtmlBoard(htmlAllSquares, board);
     if (checkWin()) {
         gameInProgress = false;
-        winning = "AI dummy";
+        winning = "AI hard";
     }
     turn = true;
 }
 
 function checkHorizontalMove(htmlAllSquares) {
-    console.log(startHardAiPos);
-    startHardAiPos = startHardAiPos + 3;
-    console.log(coordinates[startHardAiPos]);
-    if (board[coordinates[startHardAiPos][0]][coordinates[startHardAiPos][1]] === " ") {
-        board[coordinates[startHardAiPos][0]][coordinates[startHardAiPos][1]] = (userSign === "X") ? "O" : "X";
-        turn = true;
-    } else {
-        firstMoveOfHardAi = false;
-        turnAiHard(htmlAllSquares);
-
+    if (!turn) {
+        console.log(startHardAiPos);
+        startHardAiPos = startHardAiPos + 3;
+        console.log(coordinates[startHardAiPos]);
+        if (board[coordinates[startHardAiPos][0]][coordinates[startHardAiPos][1]] === " ") {
+            board[coordinates[startHardAiPos][0]][coordinates[startHardAiPos][1]] = (userSign === "X") ? "O" : "X";
+            turn = true;
+        } else {
+            firstMoveOfHardAi = false;
+            turnAiHard(htmlAllSquares);
+        }
     }
+}
 
+function blockPlayerMoveHorizontal() {
+    for (let i = 0; i < board.length; i++) {
+        for (let j = 0; j < board.length; j++) {
+            if (board[j][i] === userSign || board[j][i] === " ") {
+                if (j < 1) {
+                    if (board[j][i] === userSign && board[j + 1][i] === userSign) {
+                        board[j+2][i] = "O";
+                    }
+                } else if (j < 2) {
+                    if (board[j][i] === userSign && board[j + 1][i] === userSign){
+                        board[j-1][i] = "O";
+                    }
 
+                }
+            }
+        }
+    }
 }
 
 function checkStateOfGame(htmlAllSquares) {
