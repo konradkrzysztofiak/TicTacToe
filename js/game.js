@@ -1,7 +1,7 @@
 let difficultMap = new Map([[1, "Easy"], [2, "Medium"], [3, "Hard"]]);
 let userSign = localStorage.sign;
 let turn = true;   //todo true human, false AI
-let difficulty = 1; //todo 0 random 1 smarter 2 the smartest
+let difficulty = localStorage.difficulty; //todo 0 random 1 smarter 2 the smartest
 let gameInProgress = true;
 let board = [
     [" ", " ", " "],
@@ -36,7 +36,7 @@ window.onload = function () {
     let htmlTurn = document.querySelector("#turn");
     htmlYourSign.innerHTML = "<p>Your sign: " + localStorage.sign + "</p>";
     document.querySelector("#welcomeMessage").innerHTML = "<p>Hello " + localStorage.nick + " Let's play !</p>";
-    htmlDifficulty.innerHTML = "<p>Difficulty level: " + localStorage.difficulty + "</p>";
+    htmlDifficulty.innerHTML = "<p>Difficulty level: " + difficulty + "</p>";
     htmlPoints.innerHTML = "<p>Your Points: 0</p>";
     htmlTurn.innerHTML = "<p>Actual Turn: Ai</p>";
 
