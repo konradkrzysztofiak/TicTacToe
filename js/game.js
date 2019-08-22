@@ -60,54 +60,49 @@ window.onload = function () {
                         winning = nick;
                     }
                 }
-
-                if (!gameInProgress || checkIfBoardFull()) {
-                    console.log((winning !== "")? "winn" + winning: " REMISS  ");
-                    winning = "";
-                    gameInProgress = true;
-                    resetBoard();
-                    setTimeout(function () {
-                        refreshHtmlBoard(htmlAllSquares, board);
-                    }, 1000);
-                }
-
+                //todo check state of game part
+                checkStateOfGame(htmlAllSquares);
 
 
                 //todo AI easy part
-                if (gameInProgress) {
-                    while (true) {
-                        let y = Math.round(Math.random() * 2);
-                        let x = Math.round(Math.random() * 2);
-                        if (board[y][x] === " ") {
-                            board[y][x] = (userSign === "X") ? "O" : "X";
-                            break;
-                        }
-                    }
-                    refreshHtmlBoard(htmlAllSquares, board);
-                    if (checkWin()) {
-                        gameInProgress = false;
-                        winning = "AI dummy";
-                    }
-                }
-
-
+                turnAIDummy(htmlAllSquares);
                 //todo check state of game part
-
-                if (!gameInProgress || checkIfBoardFull()) {
-                        console.log((winning !== "")? "winn" + winning: " REMISS  ");
-                        winning = "";
-                        gameInProgress = true;
-                        resetBoard();
-                        setTimeout(function () {
-                            refreshHtmlBoard(htmlAllSquares, board);
-                        }, 1000);
-                    }
-                    console.log("<--------- END One round");
-                    //todo END One round
+                checkStateOfGame(htmlAllSquares);
+                //todo END One round
         };
     }
     console.log("End of window.onload");
 };
+
+function turnAIDummy(htmlAllSquares) {
+    if (gameInProgress) {
+        while (true) {
+            let y = Math.round(Math.random() * 2);
+            let x = Math.round(Math.random() * 2);
+            if (board[y][x] === " ") {
+                board[y][x] = (userSign === "X") ? "O" : "X";
+                break;
+            }
+        }
+        refreshHtmlBoard(htmlAllSquares, board);
+        if (checkWin()) {
+            gameInProgress = false;
+            winning = "AI dummy";
+        }
+    }
+}
+
+function checkStateOfGame(htmlAllSquares) {
+    if (!gameInProgress || checkIfBoardFull()) {
+        console.log((winning !== "") ? "winn" + winning : " REMISS  ");
+        winning = "";
+        gameInProgress = true;
+        resetBoard();
+        setTimeout(function () {
+            refreshHtmlBoard(htmlAllSquares, board);
+        }, 1000);
+    }
+}
 
 function checkIfBoardFull() {
     for (let y = 0; y < 3; y++) {
