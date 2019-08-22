@@ -51,45 +51,45 @@ window.onload = function () {
     //todo init
     for (let i = 0; i < htmlAllSquares.length; i++) {
         htmlAllSquares[i].onclick = function () {
-                //todo Human part
-                if (gameInProgress) {
-                    putMarkerOnBoard(coordinates[this.id], userSign);
-                    refreshHtmlBoard(htmlAllSquares, board);
-                    if (checkWin()) {
-                        gameInProgress = false;
-                        winning = nick;
-                    }
-                }
-                //todo check state of game part
-                checkStateOfGame(htmlAllSquares);
+        //todo Human part
+        if (gameInProgress && turn) {
+            putMarkerOnBoard(coordinates[this.id], userSign);
+            refreshHtmlBoard(htmlAllSquares, board);
+            if (checkWin()) {
+                gameInProgress = false;
+                winning = nick;
+            }
+        }
+        checkStateOfGame(htmlAllSquares);
 
 
-                //todo AI easy part
-                turnAIDummy(htmlAllSquares);
-                //todo check state of game part
-                checkStateOfGame(htmlAllSquares);
-                //todo END One round
+        //todo AI easy part
+        if (gameInProgress && !turn) {
+            turnAIDummy(htmlAllSquares);
+        }
+        checkStateOfGame(htmlAllSquares);
+        //todo END One round
         };
     }
     console.log("End of window.onload");
 };
 
 function turnAIDummy(htmlAllSquares) {
-    if (gameInProgress) {
-        while (true) {
-            let y = Math.round(Math.random() * 2);
-            let x = Math.round(Math.random() * 2);
-            if (board[y][x] === " ") {
-                board[y][x] = (userSign === "X") ? "O" : "X";
-                break;
-            }
-        }
-        refreshHtmlBoard(htmlAllSquares, board);
-        if (checkWin()) {
-            gameInProgress = false;
-            winning = "AI dummy";
+    while (true) {
+        let y = Math.round(Math.random() * 2);
+        let x = Math.round(Math.random() * 2);
+        if (board[y][x] === " ") {
+            board[y][x] = (userSign === "X") ? "O" : "X";
+            break;
         }
     }
+    refreshHtmlBoard(htmlAllSquares, board);
+    if (checkWin()) {
+        gameInProgress = false;
+        winning = "AI dummy";
+    }
+    turn = true;
+
 }
 
 function checkStateOfGame(htmlAllSquares) {
@@ -107,9 +107,7 @@ function checkStateOfGame(htmlAllSquares) {
 function checkIfBoardFull() {
     for (let y = 0; y < 3; y++) {
         for (let x = 0; x < 3; x++) {
-            console.log(board[y][x] + " <---------board[y][x]");
             if (board[y][x] === " ") {
-                console.log(" return false <------------");
                 return false;
             }
         }
@@ -158,12 +156,15 @@ function setUserSignO(htmlYourSign) {
 }
 
 function putMarkerOnBoard(coordinates, value) {
-    board[coordinates[0]][coordinates[1]] = value;
+    if (board[coordinates[0]][coordinates[1]] === " ") {
+        board[coordinates[0]][coordinates[1]] = value;
+        turn = !turn;
+    }
 }
 
 function checkWin() {
     if (checkRow() || checkColumn() || checkDiagonal()) {
-        return turn;
+        return true;
     }
 }
 
