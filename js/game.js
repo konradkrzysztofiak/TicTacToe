@@ -77,7 +77,7 @@ window.onload = function () {
         turn = "human"; //todo <--- make this random !!!
     });
     document.querySelector("#btcSave").addEventListener("click", function () {
-        savePoints();
+        savePoints(htmlUserPoints);
     });
 
 
@@ -123,34 +123,32 @@ window.onload = function () {
     console.log("End of window.onload");
 };
 
-function savePoints() {
-    // //todo how we get players and theirs score from local store
-    let playersFromLocalStorage = JSON.parse(localStorage.players);
-    for (let i = 0; i < playersFromLocalStorage.length; i++) {
-        if (playersFromLocalStorage[i].playerName === nick) {
-            playersFromLocalStorage[i].score += userPoints;
-            console.log("thesame");
+function savePoints(htmlUserPoints) {
+    let playersFromLocalStorage = [];
+    if (localStorage.players === undefined) {
+        playersFromLocalStorage.push({playerName: nick, score: userPoints});
+        localStorage.players = JSON.stringify(playersFromLocalStorage);
+    } else {
+        playersFromLocalStorage = JSON.parse(localStorage.players);
+        let userInStorage = false;
+        for (let i in playersFromLocalStorage) {
+            if (nick === playersFromLocalStorage[i].playerName) {
+                playersFromLocalStorage[i].score += userPoints;
+                userPoints = 0;
+                htmlUserPoints.innerHTML = "<p>Your Points: " + userPoints + "</p>";
+                userInStorage = true;
+                break;
+            }
         }
-        console.log(playersFromLocalStorage[i].playerName + " " + playersFromLocalStorage[i].score);
+        if (!userInStorage) {
+            playersFromLocalStorage.push({playerName: nick, score: userPoints});
+        }
     }
-    console.log("-------------------------------------------------------------------");
-
-
-    // //todo how we should storage our's all players
-    // let players = [
-    //     {playerName: "Adam0", score: 6666},
-    //     {playerName: "Adam1", score: 3},
-    //     {playerName: "Adam666", score: 4},
-    //     {playerName: "Adam3", score: 2},
-    //     {playerName: "Adam4", score: 1}
-    // ];
-    //
     function compare(a, b) {
         return b.score - a.score;
     }
     playersFromLocalStorage.sort(compare);
     localStorage.players = JSON.stringify(playersFromLocalStorage);
-
 }
 
 function turnAIDummy(htmlAllSquares) {
