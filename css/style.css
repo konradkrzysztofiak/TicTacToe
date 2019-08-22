@@ -51,6 +51,12 @@
     }
 }
 
+@media (max-width: 400px) {
+    #board {
+        left: 2%;
+    }
+    
+}
 
 
 #board .square {
