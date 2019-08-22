@@ -64,6 +64,7 @@ window.onload = function () {
     htmlTurn.innerHTML = "<p>Actual Turn: " + ((turn === "human")?"Your's":"AI") + "</p>";
     htmlWinnerIsMessage.innerHTML = "<p>Winner is: </p>";
 
+
     //todo allListeners
     document.querySelector("#btnReset").addEventListener("click", function () {
         resetBoard();
@@ -74,6 +75,9 @@ window.onload = function () {
         resetBoard();
         refreshHtmlBoard(htmlAllSquares, board);
         turn = "human"; //todo <--- make this random !!!
+    });
+    document.querySelector("#btcSave").addEventListener("click", function () {
+        savePoints();
     });
 
 
@@ -118,6 +122,36 @@ window.onload = function () {
     }
     console.log("End of window.onload");
 };
+
+function savePoints() {
+    // //todo how we get players and theirs score from local store
+    let playersFromLocalStorage = JSON.parse(localStorage.players);
+    for (let i = 0; i < playersFromLocalStorage.length; i++) {
+        if (playersFromLocalStorage[i].playerName === nick) {
+            playersFromLocalStorage[i].score += userPoints;
+            console.log("thesame");
+        }
+        console.log(playersFromLocalStorage[i].playerName + " " + playersFromLocalStorage[i].score);
+    }
+    console.log("-------------------------------------------------------------------");
+
+
+    // //todo how we should storage our's all players
+    // let players = [
+    //     {playerName: "Adam0", score: 6666},
+    //     {playerName: "Adam1", score: 3},
+    //     {playerName: "Adam666", score: 4},
+    //     {playerName: "Adam3", score: 2},
+    //     {playerName: "Adam4", score: 1}
+    // ];
+    //
+    function compare(a, b) {
+        return b.score - a.score;
+    }
+    playersFromLocalStorage.sort(compare);
+    localStorage.players = JSON.stringify(playersFromLocalStorage);
+
+}
 
 function turnAIDummy(htmlAllSquares) {
     while (true) {
