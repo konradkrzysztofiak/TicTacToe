@@ -124,12 +124,10 @@ function turnAiHard(htmlAllSquares) {
 
         for (let i = 0; i < startingPos.length; i++) {
             if (!turn) {
-                console.log("hello");
                 if (!firstMoveOfHardAi) {
-                    console.log("hello");
                     if (board[coordinates[startingPos[i]][0]][coordinates[startingPos[i]][1]] === " ") {
                         startHardAiPos = startingPos[i];
-
+                        console.log("hello");
                         board[coordinates[startHardAiPos][0]][coordinates[startHardAiPos][1]] = (userSign === "X") ? "O" : "X";
                         firstMoveOfHardAi = true;
                         turn = true;
@@ -137,9 +135,9 @@ function turnAiHard(htmlAllSquares) {
                     }
                 } else {
                     blockPlayerMoveHorizontal();
-                    blockPlayerMoveDiagonal();
-                    moveHorizontal();
                     refreshHtmlBoard(htmlAllSquares, board);
+                    moveHorizontal(htmlAllSquares);
+
                     turn = true;
                     break;
                 }
@@ -158,7 +156,7 @@ function turnAiHard(htmlAllSquares) {
     turn = true;
 }
 
-function moveHorizontal() {
+function moveHorizontal(htmlAllSquares) {
     if (!turn) {
         console.log("moveHorizontal");
         startHardAiPos = startHardAiPos + 3;
@@ -166,7 +164,9 @@ function moveHorizontal() {
             board[coordinates[startHardAiPos][0]][coordinates[startHardAiPos][1]] = (userSign === "X") ? "O" : "X";
             turn = true;
         } else {
-            firstMoveOfHardAi = false;
+            console.log("moveHorizontalFalse");
+            //firstMoveOfHardAi = false;
+            //turnAiHard(htmlAllSquares);
         }
     }
 }
@@ -191,7 +191,7 @@ function blockPlayerMoveHorizontal() {
 
                     }
                 } else {
-                    firstMoveOfHardAi = false;
+                    blockPlayerMoveDiagonal();
                 }
             }
         }
@@ -220,11 +220,14 @@ function blockPlayerMoveDiagonal() {
                             turn = true;
                         } else if (board[j][i] === userSign && board[j + 1][i - 1] === userSign && board[j - 1][i + 1] === " ") {
                             board[j - 1][i + 1] = "O";
+                            turn = true;
                         }
                     }
                 }
             }
         }
+    } else {
+        blockPlayerMoveVertical();
     }
 }
 
@@ -243,7 +246,7 @@ function checkPlayerMoveDiagonal() {
 
                         if (board[j][i] === userSign && board[j + 1][i - 1] === userSign && board[j - 1][i + 1] === " ") {
                             return true;
-                        } else if (board[j][i] === userSign && board[j - 1][i + 1] === userSign && board[j - 2][i + 2] === " ") {
+                        } else if (board[j][i] === userSign && board[j - 1][i + 1] === userSign && board[j - 1][i + 1] === " ") {
                             return true;
                         }
                     }
@@ -251,6 +254,25 @@ function checkPlayerMoveDiagonal() {
             }
         }
         return false;
+    }
+
+}
+
+function blockPlayerMoveVertical() {
+    if (!turn) {
+        console.log("blockVertical");
+        for (let j = 0; j < board.length; j++) {
+            for (let i = 0; i <= board.length; i++) {
+                console.log("hello");
+                if (board[j][i] === userSign) {
+                    if (board[j][i] === userSign && board[j][i] === userSign && board[j][i + 2] === " ") {
+                        board[j][i + 2] = (userSign === "X") ? "O" : "X";
+                        turn = true;
+                        break;
+                    }
+                }
+            }
+        }
     }
 
 }
