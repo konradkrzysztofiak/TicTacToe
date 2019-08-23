@@ -25,7 +25,6 @@ let coordinates = {
 
 
 window.onload = function () {
-    // todo allHTMLs
     let htmlAllSquares = document.querySelectorAll(".square");
     let htmlDifficulty = document.querySelector("#difficultMessage");
     let htmlYourSign = document.querySelector("#chooseSignMessage");
@@ -41,27 +40,31 @@ window.onload = function () {
     htmlTurn.innerHTML = `Actual Turn: ${(turn === "human") ? "Your's" : "AI"}`;
     htmlWinnerIsMessage.innerHTML = "Winner is: ";
 
-
-    //todo allListeners
     document.querySelector("#btnReset").addEventListener("click", function () {
         resetBoard();
         refreshHtmlBoard(htmlAllSquares, board);
-        turn = "human"; //todo <--- make this random !!!
+        turn = (Math.round(Math.random()) === 1) ? "human" : "AI";
+        if (turn === "AI") {
+            turnAI(htmlAllSquares, htmlAIPoints, htmlWinnerIsMessage);
+
+        }
     });
     document.querySelector("#btcPlayAgain").addEventListener("click", function () {
         resetBoard();
         refreshHtmlBoard(htmlAllSquares, board);
-        turn = "human"; //todo <--- make this random !!!
+        turn = (Math.round(Math.random()) === 1) ? "human" : "AI";
+        if (turn === "AI") {
+            turnAI(htmlAllSquares, htmlAIPoints, htmlWinnerIsMessage);
+
+        }
     });
     document.querySelector("#btcSave").addEventListener("click", function () {
         savePoints(htmlUserPoints);
     });
 
 
-    //todo init
     for (let i = 0; i < htmlAllSquares.length; i++) {
         htmlAllSquares[i].onclick = function () {
-            //todo Human part
             if (turn === "human") {
                 turn = (putMarkerOnBoard(coordinates[this.id], userSign)) ? "AI" : "human";
                 refreshHtmlBoard(htmlAllSquares, board);
@@ -75,37 +78,39 @@ window.onload = function () {
                     htmlWinnerIsMessage.innerHTML = " !!! DRAW !!! ";
                     turn = "";
                 }
-            }
-
-
-            //todo AI easy part
-            if (turn === "AI") {
-                if (difficulty === "easy") {
-                    turnAIDummy();
-                } else if (difficulty === "medium") {
-                    turnAIMedium();
-                } else {
-                    turnAIHard();
-                }
-                // refreshHtmlBoard(htmlAllSquares, board);
-                turn = "human";
-                if (checkWin()) {
-                    winning = "AI";
-                    htmlAIPoints.innerHTML = `AI Points: ${++AIPoints}`;
-                    htmlWinnerIsMessage.innerHTML = `Winner is: ${winning} `;
-                    turn = "";
-                }
-                if (checkDraw() && turn !== "") {
-                    htmlWinnerIsMessage.innerHTML = " !!! DRAW !!! ";
-                    turn = "";
-                }
                 refreshHtmlBoard(htmlAllSquares, board);
             }
-            //todo END One round
+
+            turnAI(htmlAllSquares, htmlAIPoints, htmlWinnerIsMessage);
         };
     }
     console.log("End of window.onload");
 };
+
+function turnAI(htmlAllSquares, htmlAIPoints, htmlWinnerIsMessage) {
+    if (turn === "AI") {
+        if (difficulty === "easy") {
+            turnAIDummy(htmlAllSquares);
+        } else if (difficulty === "medium") {
+            turnAIMedium(htmlAllSquares);
+        } else {
+            turnAIHard(htmlAllSquares);
+        }
+        refreshHtmlBoard(htmlAllSquares, board);
+        turn = "human";
+        if (checkWin()) {
+            winning = "AI";
+            htmlAIPoints.innerHTML = `AI Points: ${++AIPoints}`;
+            htmlWinnerIsMessage.innerHTML = `Winner is: ${winning} `;
+            turn = "";
+        }
+        if (checkDraw() && turn !== "") {
+            htmlWinnerIsMessage.innerHTML = " !!! DRAW !!! ";
+            turn = "";
+        }
+        refreshHtmlBoard(htmlAllSquares, board);
+    }
+}
 
 function savePoints(htmlUserPoints) {
     let playersFromLocalStorage = [];
@@ -128,11 +133,9 @@ function savePoints(htmlUserPoints) {
             playersFromLocalStorage.push({playerName: nick, score: userPoints});
         }
     }
-
     function compare(a, b) {
         return b.score - a.score;
     }
-
     playersFromLocalStorage.sort(compare);
     localStorage.players = JSON.stringify(playersFromLocalStorage);
 }
@@ -208,7 +211,7 @@ function turnAIMedium() {
     }
 }
 
-function turnAIHard(htmlAllSquares) {
+function turnAIHard() {
     let AISign = (userSign === "X") ? "O" : "X";
     if (board[1][1] === " ") {
         board[1][1] = AISign;
@@ -400,3 +403,185 @@ function checkDiagonal() {
     }
 }
 
+
+//todo ------------------HARD--------------------
+function turnAiHard(htmlAllSquares) {
+
+
+    while (true) {
+
+        for (let i = 0; i < startingPos.length; i++) {
+            if (!turn) {
+                if (!firstMoveOfHardAi) {
+                    if (board[coordinates[startingPos[i]][0]][coordinates[startingPos[i]][1]] === " ") {
+                        startHardAiPos = startingPos[i];
+                        console.log("hello");
+                        board[coordinates[startHardAiPos][0]][coordinates[startHardAiPos][1]] = (userSign === "X") ? "O" : "X";
+                        firstMoveOfHardAi = true;
+                        turn = true;
+                        break;
+                    }
+                } else {
+                    blockPlayerMoveHorizontal();
+                    refreshHtmlBoard(htmlAllSquares, board);
+                    moveHorizontal(htmlAllSquares);
+
+                    turn = true;
+                    break;
+                }
+            }
+        }
+        break;
+
+
+    }
+
+    refreshHtmlBoard(htmlAllSquares, board);
+    if (checkWin()) {
+        gameInProgress = false;
+        winning = "AI hard";
+    }
+    turn = true;
+}
+
+function moveHorizontal(htmlAllSquares) {
+    if (!turn) {
+        console.log("moveHorizontal");
+        startHardAiPos = startHardAiPos + 3;
+        if (board[coordinates[startHardAiPos][0]][coordinates[startHardAiPos][1]] === " ") {
+            board[coordinates[startHardAiPos][0]][coordinates[startHardAiPos][1]] = (userSign === "X") ? "O" : "X";
+            turn = true;
+        } else {
+            console.log("moveHorizontalFalse");
+            //firstMoveOfHardAi = false;
+            //turnAiHard(htmlAllSquares);
+        }
+    }
+}
+
+function blockPlayerMoveHorizontal() {
+
+    if (!turn) {
+        console.log("blockHorizontal");
+        for (let i = 0; i < board.length; i++) {
+            for (let j = 0; j < board.length; j++) {
+                if (board[j][i] === userSign || board[j][i] === " ") {
+                    if (j < 1) {
+                        if (board[j][i] === userSign && board[j + 1][i] === userSign && board[j + 2][i] === " ") {
+                            board[j + 2][i] = "O";
+                            turn = true;
+                        }
+                    } else if (j < 2) {
+                        if (board[j][i] === userSign && board[j + 1][i] === userSign && board[j - 1][i] === " ") {
+                            board[j - 1][i] = "O";
+                            turn = true;
+                        }
+
+                    }
+                } else {
+                    blockPlayerMoveDiagonal();
+                }
+            }
+        }
+    }
+}
+
+function blockPlayerMoveDiagonal() {
+    if (!turn && checkPlayerMoveDiagonal()) {
+        console.log("blockDiagonal");
+        for (let i = 0; i < board.length; i++) {
+            for (let j = 0; j < board.length; j++) {
+                if (board[j][i] === userSign) {
+                    if (j < 1) {
+                        if (board[j][i] === userSign && board[j + 1][i + 1] === userSign) {
+                            board[j + 2][i + 2] = "O";
+                            turn = true;
+                        } else if (board[j][i] === userSign && board[j + 2][i - 1] === userSign) {
+                            board[j + 2][i - 2] = "O";
+                            turn = true;
+                        }
+                    } else if (j < 2) {
+                        if (board[j][i] === userSign && board[j + 1][i - 1] === userSign && board[j - 1][i + 1] === " ") {
+                            board[j - 1][i + 1] = "O";
+                            turn = true;
+                        } else if (board[j][i] === userSign && board[j + 1][i - 1] === userSign && board[j - 1][i + 1] === " ") {
+                            board[j - 1][i + 1] = "O";
+                            turn = true;
+                        }
+                    }
+                }
+            }
+        }
+    } else {
+        blockPlayerMoveVertical();
+    }
+}
+
+function checkPlayerMoveDiagonal() {
+    if (!turn) {
+        for (let i = 0; i < board.length; i++) {
+            for (let j = 0; j < board.length; j++) {
+                if (board[j][i] === userSign) {
+                    if (j < 1) {
+                        if (board[j][i] === userSign && board[j + 1][i + 1] === userSign && board[j + 2][i + 2] === " ") {
+                            return true;
+                        } else if (board[j][i] === userSign && board[j + 2][i - 1] === userSign && board[j + 2][i - 2] === " ") {
+                            return true;
+                        }
+                    } else if (j < 2) {
+
+                        if (board[j][i] === userSign && board[j + 1][i - 1] === userSign && board[j - 1][i + 1] === " ") {
+                            return true;
+                        } else if (board[j][i] === userSign && board[j - 1][i + 1] === userSign && board[j - 1][i + 1] === " ") {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+}
+
+function blockPlayerMoveVertical() {
+    if (!turn) {
+        console.log("blockVertical");
+        for (let j = 0; j < board.length; j++) {
+            for (let i = 0; i <= board.length; i++) {
+                console.log("hello");
+                if (board[j][i] === userSign) {
+                    if (board[j][i] === userSign && board[j][i] === userSign && board[j][i + 2] === " ") {
+                        board[j][i + 2] = (userSign === "X") ? "O" : "X";
+                        turn = true;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+}
+
+
+// function increaseDifficulty(htmlIncrease) {
+//     if (difficulty < 3 && difficulty++) {
+//         htmlIncrease.innerHTML = "<p>Difficulty: " + difficultMap.get(difficulty) + "</p>";
+//     }
+// }
+//
+// function decreaseDifficulty(htmlIncrease) {
+//     if (difficulty > 1 && difficulty--) {
+//         htmlIncrease.innerHTML = "<p>Difficulty: " + difficultMap.get(difficulty) + "</p>";
+//     }
+// }
+//
+// function setUserSignX(htmlYourSign) {
+//     userSign = "X";
+//     htmlYourSign.innerHTML = "<p>Your sign: " + userSign + "</p>";
+// }
+//
+// function setUserSignO(htmlYourSign) {
+//     userSign = "O";
+//     htmlYourSign.innerHTML = "<p>Your sign: " + userSign + "</p>";
+// }
