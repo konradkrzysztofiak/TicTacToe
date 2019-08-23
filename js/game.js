@@ -1,10 +1,9 @@
-let difficultMap = new Map([[1, "Easy"], [2, "Medium"], [3, "Hard"]]);
 let nick = localStorage.nick;
-let difficulty = localStorage.difficulty; //todo 0 random 1 smarter 2 the smartest
+let difficulty = localStorage.difficulty;
 let userSign = localStorage.sign;
-let userPoints = 0; //todo ----> We need write this in JSON <----
+let userPoints = 0;
 let AIPoints = 0;
-let turn = "human";   //todo <--- I had to change this ....>
+let turn = "human";
 let winning = "";
 let board = [
     [" ", " ", " "],
@@ -26,28 +25,6 @@ let coordinates = {
 
 
 window.onload = function () {
-    // //todo how we should storage our's all players
-    // var players = [
-    //     {playerName: "Adam0", score: 6666},
-    //     {playerName: "Adam1", score: 3},
-    //     {playerName: "Adam666", score: 4},
-    //     {playerName: "Adam3", score: 2},
-    //     {playerName: "Adam4", score: 1}
-    // ];
-    // function compare(a, b) {
-    //     return b.score - a.score;
-    // }
-    // players.sort(compare);
-    // localStorage.players = JSON.stringify(players);
-    // //todo how we get players and theirs score from local store
-    // var playersFromLocalStorage = JSON.parse(localStorage.players);
-    // for (let i = 0; i < playersFromLocalStorage.length; i++) {
-    //     console.log(playersFromLocalStorage[i].playerName + " " + playersFromLocalStorage[i].score);
-    // }
-    // console.log("-------------------------------------------------------------------");
-
-
-
     // todo allHTMLs
     let htmlAllSquares = document.querySelectorAll(".square");
     let htmlDifficulty = document.querySelector("#difficultMessage");
@@ -56,13 +33,13 @@ window.onload = function () {
     let htmlAIPoints = document.querySelector("#AIPoints");
     let htmlTurn = document.querySelector("#turn");
     let htmlWinnerIsMessage = document.querySelector("#winnerIsMessage");
-    htmlYourSign.innerHTML = "<p>Your sign: " + localStorage.sign + "</p>";
-    document.querySelector("#welcomeMessage").innerHTML = "<p>Hello " + nick + " Let's play !</p>";
-    htmlDifficulty.innerHTML = "<p>Difficulty level: " + difficulty + "</p>";
-    htmlUserPoints.innerHTML = "<p>Your Points: " + userPoints + "</p>";
-    htmlAIPoints.innerHTML = "<p>AI Points: " + AIPoints + "</p>";
-    htmlTurn.innerHTML = "<p>Actual Turn: " + ((turn === "human")?"Your's":"AI") + "</p>";
-    htmlWinnerIsMessage.innerHTML = "<p>Winner is: </p>";
+    htmlYourSign.innerHTML = `Your sign: ${localStorage.sign}`;
+    document.querySelector("#welcomeMessage").innerHTML = `Hello ${nick} Let's play !`;
+    htmlDifficulty.innerHTML = `Difficulty level: ${difficulty}`;
+    htmlUserPoints.innerHTML = `Your Points: ${userPoints}`;
+    htmlAIPoints.innerHTML = `AI Points: ${AIPoints}`;
+    htmlTurn.innerHTML = `Actual Turn: ${(turn === "human") ? "Your's" : "AI"}`;
+    htmlWinnerIsMessage.innerHTML = "Winner is: ";
 
 
     //todo allListeners
@@ -90,12 +67,12 @@ window.onload = function () {
                 refreshHtmlBoard(htmlAllSquares, board);
                 if (checkWin()) {
                     winning = nick;
-                    htmlUserPoints.innerHTML = "<p>Your Points: " + ++userPoints + "</p>";
-                    htmlWinnerIsMessage.innerHTML = "<p>Winner is: " + winning + " </p>";
+                    htmlUserPoints.innerHTML = `Your Points: ${++userPoints}`;
+                    htmlWinnerIsMessage.innerHTML = `Winner is: ${winning} `;
                     turn = "";
                 }
                 if (checkDraw() && turn !== "") {
-                    htmlWinnerIsMessage.innerHTML = "<p> !!! DRAW !!! </p>";
+                    htmlWinnerIsMessage.innerHTML = " !!! DRAW !!! ";
                     turn = "";
                 }
             }
@@ -103,19 +80,26 @@ window.onload = function () {
 
             //todo AI easy part
             if (turn === "AI") {
-                turnAIDummy(htmlAllSquares);
-                refreshHtmlBoard(htmlAllSquares, board);
+                if (difficulty === "easy") {
+                    turnAIDummy();
+                } else if (difficulty === "medium") {
+                    turnAIMedium();
+                } else {
+                    turnAIHard();
+                }
+                // refreshHtmlBoard(htmlAllSquares, board);
                 turn = "human";
                 if (checkWin()) {
                     winning = "AI";
-                    htmlAIPoints.innerHTML = "<p>AI Points: " + ++AIPoints + "</p>";
-                    htmlWinnerIsMessage.innerHTML = "<p>Winner is: " + winning + " </p>";
+                    htmlAIPoints.innerHTML = `AI Points: ${++AIPoints}`;
+                    htmlWinnerIsMessage.innerHTML = `Winner is: ${winning} `;
                     turn = "";
                 }
                 if (checkDraw() && turn !== "") {
-                    htmlWinnerIsMessage.innerHTML = "<p> !!! DRAW !!! </p>";
+                    htmlWinnerIsMessage.innerHTML = " !!! DRAW !!! ";
                     turn = "";
                 }
+                refreshHtmlBoard(htmlAllSquares, board);
             }
             //todo END One round
         };
@@ -135,7 +119,7 @@ function savePoints(htmlUserPoints) {
             if (nick === playersFromLocalStorage[i].playerName) {
                 playersFromLocalStorage[i].score += userPoints;
                 userPoints = 0;
-                htmlUserPoints.innerHTML = "<p>Your Points: " + userPoints + "</p>";
+                htmlUserPoints.innerHTML = `Your Points: ${userPoints}`;
                 userInStorage = true;
                 break;
             }
@@ -144,14 +128,16 @@ function savePoints(htmlUserPoints) {
             playersFromLocalStorage.push({playerName: nick, score: userPoints});
         }
     }
+
     function compare(a, b) {
         return b.score - a.score;
     }
+
     playersFromLocalStorage.sort(compare);
     localStorage.players = JSON.stringify(playersFromLocalStorage);
 }
 
-function turnAIDummy(htmlAllSquares) {
+function turnAIDummy() {
     while (true) {
         let y = Math.round(Math.random() * 2);
         let x = Math.round(Math.random() * 2);
@@ -161,6 +147,170 @@ function turnAIDummy(htmlAllSquares) {
         }
     }
 }
+
+function turnAIMedium() {
+    let AISign = (userSign === "X") ? "O" : "X";
+    if (board[1][1] === " ") {
+        board[1][1] = AISign;
+        return;
+    }
+    while (true) {
+        for (let y = 0; y < 3; y++) {
+            if (board[y][0] === AISign && board[y][1] === AISign && board[y][2] === " ") {
+                board[y][2] = AISign;
+                return;
+            }
+            if (board[y][1] === AISign && board[y][2] === AISign && board[y][0] === " ") {
+                board[y][0] = AISign;
+                return;
+            }
+            if (board[y][2] === AISign && board[y][0] === AISign && board[y][1] === " ") {
+                board[y][1] = AISign;
+                return;
+            }
+            if (board[0][y] === AISign && board[1][y] === AISign && board[2][y] === " ") {
+                board[2][y] = AISign;
+                return;
+            }
+            if (board[1][y] === AISign && board[2][y] === AISign && board[0][y] === " ") {
+                board[0][y] = AISign;
+                return;
+            }
+            if (board[2][y] === AISign && board[0][y] === AISign && board[0][y] === " ") {
+                board[1][y] = AISign;
+                return;
+            }
+        }
+        if (board[0][0] === AISign && board[1][1] === AISign && board[2][2] === " ") {
+            board[2][2] = AISign;
+            return;
+        }
+        if (board[0][2] === AISign && board[1][1] === AISign && board[2][0] === " ") {
+            board[2][0] = AISign;
+            return;
+        }
+        if (board[2][2] === AISign && board[1][1] === AISign && board[0][0] === " ") {
+            board[0][0] = AISign;
+            return;
+        }
+        if (board[2][0] === AISign && board[1][1] === AISign && board[0][2] === " ") {
+            board[0][2] = AISign;
+            return;
+        }
+
+
+        let y = Math.round(Math.random() * 2);
+        let x = Math.round(Math.random() * 2);
+        if (board[y][x] === " ") {
+            board[y][x] = (userSign === "X") ? "O" : "X";
+            break;
+        }
+    }
+}
+
+function turnAIHard(htmlAllSquares) {
+    let AISign = (userSign === "X") ? "O" : "X";
+    if (board[1][1] === " ") {
+        board[1][1] = AISign;
+        return;
+    }
+    while (true) {
+        for (let y = 0; y < 3; y++) {
+            if (board[y][0] === AISign && board[y][1] === AISign && board[y][2] === " ") {
+                board[y][2] = AISign;
+                return;
+            }
+            if (board[y][1] === AISign && board[y][2] === AISign && board[y][0] === " ") {
+                board[y][0] = AISign;
+                return;
+            }
+            if (board[y][2] === AISign && board[y][0] === AISign && board[y][1] === " ") {
+                board[y][1] = AISign;
+                return;
+            }
+            if (board[0][y] === AISign && board[1][y] === AISign && board[2][y] === " ") {
+                board[2][y] = AISign;
+                return;
+            }
+            if (board[1][y] === AISign && board[2][y] === AISign && board[0][y] === " ") {
+                board[0][y] = AISign;
+                return;
+            }
+            if (board[2][y] === AISign && board[0][y] === AISign && board[0][y] === " ") {
+                board[1][y] = AISign;
+                return;
+            }
+        }
+        if (board[0][0] === AISign && board[1][1] === AISign && board[2][2] === " ") {
+            board[2][2] = AISign;
+            return;
+        }
+        if (board[0][2] === AISign && board[1][1] === AISign && board[2][0] === " ") {
+            board[2][0] = AISign;
+            return;
+        }
+        if (board[2][2] === AISign && board[1][1] === AISign && board[0][0] === " ") {
+            board[0][0] = AISign;
+            return;
+        }
+        if (board[2][0] === AISign && board[1][1] === AISign && board[0][2] === " ") {
+            board[0][2] = AISign;
+            return;
+        }
+
+        for (let y = 0; y < 3; y++) {
+            if (board[y][0] === userSign && board[y][1] === userSign && board[y][2] === " ") {
+                board[y][2] = AISign;
+                return;
+            }
+            if (board[y][1] === userSign && board[y][2] === userSign && board[y][0] === " ") {
+                board[y][0] = AISign;
+                return;
+            }
+            if (board[y][2] === userSign && board[y][0] === userSign && board[y][1] === " ") {
+                board[y][1] = AISign;
+                return;
+            }
+            if (board[0][y] === userSign && board[1][y] === userSign && board[2][y] === " ") {
+                board[2][y] = AISign;
+                return;
+            }
+            if (board[1][y] === userSign && board[2][y] === userSign && board[0][y] === " ") {
+                board[0][y] = AISign;
+                return;
+            }
+            if (board[2][y] === userSign && board[0][y] === userSign && board[0][y] === " ") {
+                board[1][y] = AISign;
+                return;
+            }
+        }
+        if (board[0][0] === userSign && board[1][1] === userSign && board[2][2] === " ") {
+            board[2][2] = AISign;
+            return;
+        }
+        if (board[0][2] === userSign && board[1][1] === userSign && board[2][0] === " ") {
+            board[2][0] = AISign;
+            return;
+        }
+        if (board[2][2] === userSign && board[1][1] === userSign && board[0][0] === " ") {
+            board[0][0] = AISign;
+            return;
+        }
+        if (board[2][0] === userSign && board[1][1] === userSign && board[0][2] === " ") {
+            board[0][2] = AISign;
+            return;
+        }
+
+
+        let y = Math.round(Math.random() * 2);
+        let x = Math.round(Math.random() * 2);
+        if (board[y][x] === " ") {
+            board[y][x] = (userSign === "X") ? "O" : "X";
+            break;
+        }
+    }
+}
+
 
 function checkDraw() {
     for (let y = 0; y < 3; y++) {
@@ -250,24 +400,3 @@ function checkDiagonal() {
     }
 }
 
-// function increaseDifficulty(htmlIncrease) {
-//     if (difficulty < 3 && difficulty++) {
-//         htmlIncrease.innerHTML = "<p>Difficulty: " + difficultMap.get(difficulty) + "</p>";
-//     }
-// }
-//
-// function decreaseDifficulty(htmlIncrease) {
-//     if (difficulty > 1 && difficulty--) {
-//         htmlIncrease.innerHTML = "<p>Difficulty: " + difficultMap.get(difficulty) + "</p>";
-//     }
-// }
-//
-// function setUserSignX(htmlYourSign) {
-//     userSign = "X";
-//     htmlYourSign.innerHTML = "<p>Your sign: " + userSign + "</p>";
-// }
-//
-// function setUserSignO(htmlYourSign) {
-//     userSign = "O";
-//     htmlYourSign.innerHTML = "<p>Your sign: " + userSign + "</p>";
-// }
