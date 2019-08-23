@@ -120,7 +120,7 @@ function savePoints(htmlUserPoints) {
     } else {
         playersFromLocalStorage = JSON.parse(localStorage.players);
         let userInStorage = false;
-        for (let i in playersFromLocalStorage) {
+        for (let i = 0; i < playersFromLocalStorage.length; i++) {
             if (nick === playersFromLocalStorage[i].playerName) {
                 playersFromLocalStorage[i].score += userPoints;
                 userPoints = 0;
