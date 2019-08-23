@@ -107,6 +107,9 @@ h1{
     font-size: 18px;
     font-weight: bold;
 }
+#playerInfo *{
+    padding: 7px;
+}
 
 #btnReset {
     position: relative;
