@@ -25,7 +25,6 @@ let coordinates = {
 
 
 window.onload = function () {
-    // todo allHTMLs
     let htmlAllSquares = document.querySelectorAll(".square");
     let htmlDifficulty = document.querySelector("#difficultMessage");
     let htmlYourSign = document.querySelector("#chooseSignMessage");
@@ -41,27 +40,31 @@ window.onload = function () {
     htmlTurn.innerHTML = `Actual Turn: ${(turn === "human") ? "Your's" : "AI"}`;
     htmlWinnerIsMessage.innerHTML = "Winner is: ";
 
-
-    //todo allListeners
     document.querySelector("#btnReset").addEventListener("click", function () {
         resetBoard();
         refreshHtmlBoard(htmlAllSquares, board);
-        turn = "human"; //todo <--- make this random !!!
+        turn = (Math.round(Math.random()) === 1) ? "human" : "AI";
+        if (turn === "AI") {
+            turnAI(htmlAllSquares, htmlAIPoints, htmlWinnerIsMessage);
+
+        }
     });
     document.querySelector("#btcPlayAgain").addEventListener("click", function () {
         resetBoard();
         refreshHtmlBoard(htmlAllSquares, board);
-        turn = "human"; //todo <--- make this random !!!
+        turn = (Math.round(Math.random()) === 1) ? "human" : "AI";
+        if (turn === "AI") {
+            turnAI(htmlAllSquares, htmlAIPoints, htmlWinnerIsMessage);
+
+        }
     });
     document.querySelector("#btcSave").addEventListener("click", function () {
         savePoints(htmlUserPoints);
     });
 
 
-    //todo init
     for (let i = 0; i < htmlAllSquares.length; i++) {
         htmlAllSquares[i].onclick = function () {
-            //todo Human part
             if (turn === "human") {
                 turn = (putMarkerOnBoard(coordinates[this.id], userSign)) ? "AI" : "human";
                 refreshHtmlBoard(htmlAllSquares, board);
@@ -77,35 +80,36 @@ window.onload = function () {
                 }
             }
 
-
-            //todo AI easy part
-            if (turn === "AI") {
-                if (difficulty === "easy") {
-                    turnAIDummy(htmlAllSquares);
-                } else if (difficulty === "medium") {
-                    turnAIMedium(htmlAllSquares);
-                } else {
-                    turnAIHard(htmlAllSquares);
-                }
-                // refreshHtmlBoard(htmlAllSquares, board);
-                turn = "human";
-                if (checkWin()) {
-                    winning = "AI";
-                    htmlAIPoints.innerHTML = `AI Points: ${++AIPoints}`;
-                    htmlWinnerIsMessage.innerHTML = `Winner is: ${winning} `;
-                    turn = "";
-                }
-                if (checkDraw() && turn !== "") {
-                    htmlWinnerIsMessage.innerHTML = " !!! DRAW !!! ";
-                    turn = "";
-                }
-                refreshHtmlBoard(htmlAllSquares, board);
-            }
-            //todo END One round
+            turnAI(htmlAllSquares, htmlAIPoints, htmlWinnerIsMessage);
         };
     }
     console.log("End of window.onload");
 };
+
+function turnAI(htmlAllSquares, htmlAIPoints, htmlWinnerIsMessage) {
+    if (turn === "AI") {
+        if (difficulty === "easy") {
+            turnAIDummy(htmlAllSquares);
+        } else if (difficulty === "medium") {
+            turnAIMedium(htmlAllSquares);
+        } else {
+            turnAIHard(htmlAllSquares);
+        }
+        refreshHtmlBoard(htmlAllSquares, board);
+        turn = "human";
+        if (checkWin()) {
+            winning = "AI";
+            htmlAIPoints.innerHTML = `AI Points: ${++AIPoints}`;
+            htmlWinnerIsMessage.innerHTML = `Winner is: ${winning} `;
+            turn = "";
+        }
+        if (checkDraw() && turn !== "") {
+            htmlWinnerIsMessage.innerHTML = " !!! DRAW !!! ";
+            turn = "";
+        }
+        refreshHtmlBoard(htmlAllSquares, board);
+    }
+}
 
 function savePoints(htmlUserPoints) {
     let playersFromLocalStorage = [];
@@ -135,7 +139,7 @@ function savePoints(htmlUserPoints) {
     localStorage.players = JSON.stringify(playersFromLocalStorage);
 }
 
-function turnAIDummy(htmlAllSquares) {
+function turnAIDummy() {
     while (true) {
         let y = Math.round(Math.random() * 2);
         let x = Math.round(Math.random() * 2);
@@ -146,7 +150,7 @@ function turnAIDummy(htmlAllSquares) {
     }
 }
 
-function turnAIMedium(htmlAllSquares) {
+function turnAIMedium() {
     let AISign = (userSign === "X") ? "O" : "X";
     if (board[1][1] === " ") {
         board[1][1] = AISign;
@@ -206,7 +210,7 @@ function turnAIMedium(htmlAllSquares) {
     }
 }
 
-function turnAIHard(htmlAllSquares) {
+function turnAIHard() {
     let AISign = (userSign === "X") ? "O" : "X";
     if (board[1][1] === " ") {
         board[1][1] = AISign;
