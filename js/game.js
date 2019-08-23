@@ -80,9 +80,9 @@ window.onload = function () {
                 }
                 refreshHtmlBoard(htmlAllSquares, board);
             }
-
             turnAI(htmlAllSquares, htmlAIPoints, htmlWinnerIsMessage);
         };
+
     }
     console.log("End of window.onload");
 };
@@ -334,6 +334,7 @@ function resetBoard() {
     }
 }
 
+
 function refreshHtmlBoard(htmlSquares, bordIn) {
     let z = 0;
     for (let y = 0; y < 3; y++) {
@@ -398,7 +399,6 @@ function checkDiagonal() {
                     }
                 }
             }
-
         }
     }
 }
@@ -560,28 +560,5 @@ function blockPlayerMoveVertical() {
             }
         }
     }
-
 }
 
-
-// function increaseDifficulty(htmlIncrease) {
-//     if (difficulty < 3 && difficulty++) {
-//         htmlIncrease.innerHTML = "<p>Difficulty: " + difficultMap.get(difficulty) + "</p>";
-//     }
-// }
-//
-// function decreaseDifficulty(htmlIncrease) {
-//     if (difficulty > 1 && difficulty--) {
-//         htmlIncrease.innerHTML = "<p>Difficulty: " + difficultMap.get(difficulty) + "</p>";
-//     }
-// }
-//
-// function setUserSignX(htmlYourSign) {
-//     userSign = "X";
-//     htmlYourSign.innerHTML = "<p>Your sign: " + userSign + "</p>";
-// }
-//
-// function setUserSignO(htmlYourSign) {
-//     userSign = "O";
-//     htmlYourSign.innerHTML = "<p>Your sign: " + userSign + "</p>";
-// }

@@ -37,6 +37,7 @@ window.onload = function () {
         localStorage.nick = nick.value;
     });
 
+
     document.getElementById('difficulty').onclick = function () {
         let value = getRadioValue(this, 'difficulty');
         localStorage.difficulty = value;
@@ -75,7 +76,6 @@ window.onload = function () {
     function getRadioValue(form, name) {
         let value;
         let radios = form.elements[name];
-
         for (let i = 0, len = radios.length; i < len; i++) {
             if (radios[i].checked) {
                 value = radios[i].value;
@@ -84,6 +84,4 @@ window.onload = function () {
         }
         return value;
     }
-
-
 };
