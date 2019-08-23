@@ -1,20 +1,16 @@
-let difficultMap = new Map([[1, "easy"], [2, "medium"], [3, "hard"]]);
+let difficultMap = new Map([[1, "Easy"], [2, "Medium"], [3, "Hard"]]);
 let nick = localStorage.nick;
-let difficulty = localStorage.difficulty; //todo 1 random 2 smarter 3 the smartest
+let difficulty = localStorage.difficulty; //todo 0 random 1 smarter 2 the smartest
 let userSign = localStorage.sign;
 let userPoints = 0; //todo ----> We need write this in JSON <----
-let turn = true;   //todo true human, false AI
-let gameInProgress = true;
-let firstMoveOfHardAi = false;
-let startHardAiPos;
-let startingPos = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+let AIPoints = 0;
+let turn = "human";   //todo <--- I had to change this ....>
 let winning = "";
 let board = [
     [" ", " ", " "],
     [" ", " ", " "],
     [" ", " ", " "],
 ];
-
 
 let coordinates = {
     1: [0, 0],
@@ -30,73 +26,129 @@ let coordinates = {
 
 
 window.onload = function () {
+    // //todo how we should storage our's all players
+    // var players = [
+    //     {playerName: "Adam0", score: 6666},
+    //     {playerName: "Adam1", score: 3},
+    //     {playerName: "Adam666", score: 4},
+    //     {playerName: "Adam3", score: 2},
+    //     {playerName: "Adam4", score: 1}
+    // ];
+    // function compare(a, b) {
+    //     return b.score - a.score;
+    // }
+    // players.sort(compare);
+    // localStorage.players = JSON.stringify(players);
+    // //todo how we get players and theirs score from local store
+    // var playersFromLocalStorage = JSON.parse(localStorage.players);
+    // for (let i = 0; i < playersFromLocalStorage.length; i++) {
+    //     console.log(playersFromLocalStorage[i].playerName + " " + playersFromLocalStorage[i].score);
+    // }
+    // console.log("-------------------------------------------------------------------");
+
+
+
     // todo allHTMLs
     let htmlAllSquares = document.querySelectorAll(".square");
     let htmlDifficulty = document.querySelector("#difficultMessage");
     let htmlYourSign = document.querySelector("#chooseSignMessage");
-    let htmlPoints = document.querySelector("#points");
+    let htmlUserPoints = document.querySelector("#userPoints");
+    let htmlAIPoints = document.querySelector("#AIPoints");
     let htmlTurn = document.querySelector("#turn");
-    let htmlWelcomeMessage = document.querySelector("#welcomeMessage");
+    let htmlWinnerIsMessage = document.querySelector("#winnerIsMessage");
+    htmlYourSign.innerHTML = "<p>Your sign: " + localStorage.sign + "</p>";
+    document.querySelector("#welcomeMessage").innerHTML = "<p>Hello " + nick + " Let's play !</p>";
+    htmlDifficulty.innerHTML = "<p>Difficulty level: " + difficulty + "</p>";
+    htmlUserPoints.innerHTML = "<p>Your Points: " + userPoints + "</p>";
+    htmlAIPoints.innerHTML = "<p>AI Points: " + AIPoints + "</p>";
+    htmlTurn.innerHTML = "<p>Actual Turn: " + ((turn === "human")?"Your's":"AI") + "</p>";
+    htmlWinnerIsMessage.innerHTML = "<p>Winner is: </p>";
 
-    initPlayerInfoBox();
+
     //todo allListeners
     document.querySelector("#btnReset").addEventListener("click", function () {
         resetBoard();
         refreshHtmlBoard(htmlAllSquares, board);
-        gameInProgress = true;
+        turn = "human"; //todo <--- make this random !!!
+    });
+    document.querySelector("#btcPlayAgain").addEventListener("click", function () {
+        resetBoard();
+        refreshHtmlBoard(htmlAllSquares, board);
+        turn = "human"; //todo <--- make this random !!!
+    });
+    document.querySelector("#btcSave").addEventListener("click", function () {
+        savePoints(htmlUserPoints);
     });
 
 
     //todo init
     for (let i = 0; i < htmlAllSquares.length; i++) {
         htmlAllSquares[i].onclick = function () {
-            if (gameInProgress && turn) {
-                putMarkerOnBoard(coordinates[this.id], userSign);
+            //todo Human part
+            if (turn === "human") {
+                turn = (putMarkerOnBoard(coordinates[this.id], userSign)) ? "AI" : "human";
                 refreshHtmlBoard(htmlAllSquares, board);
                 if (checkWin()) {
-                    gameInProgress = false;
                     winning = nick;
-                    htmlPoints.innerHTML = "<p>Your Points: " + userPoints++ + "</p>";
+                    htmlUserPoints.innerHTML = "<p>Your Points: " + ++userPoints + "</p>";
+                    htmlWinnerIsMessage.innerHTML = "<p>Winner is: " + winning + " </p>";
+                    turn = "";
+                }
+                if (checkDraw() && turn !== "") {
+                    htmlWinnerIsMessage.innerHTML = "<p> !!! DRAW !!! </p>";
+                    turn = "";
                 }
             }
-            if (gameInProgress) {
-                checkStateOfGame(htmlAllSquares);
 
-                runAi(getValueFromMap(difficultMap, localStorage.difficulty));
-            }
 
-        };
-        console.log("End of window.onload");
-    }
-
-    function runAi(difficulty) {
-        if (gameInProgress && !turn) {
-            if (difficulty === 1) {
+            //todo AI easy part
+            if (turn === "AI") {
                 turnAIDummy(htmlAllSquares);
-            } else if (difficulty === 2) {
-                //todo medium
-            } else if (difficulty === 3) {
-                turnAiHard(htmlAllSquares);
+                refreshHtmlBoard(htmlAllSquares, board);
+                turn = "human";
+                if (checkWin()) {
+                    winning = "AI";
+                    htmlAIPoints.innerHTML = "<p>AI Points: " + ++AIPoints + "</p>";
+                    htmlWinnerIsMessage.innerHTML = "<p>Winner is: " + winning + " </p>";
+                    turn = "";
+                }
+                if (checkDraw() && turn !== "") {
+                    htmlWinnerIsMessage.innerHTML = "<p> !!! DRAW !!! </p>";
+                    turn = "";
+                }
             }
-        }
-
-        //todo END One round
+            //todo END One round
+        };
     }
-
-    function initPlayerInfoBox() {
-        htmlYourSign.innerHTML = "<p>Your sign: " + localStorage.sign + "</p>";
-        htmlWelcomeMessage.innerHTML = "<p>Hello " + nick + " Let's play !</p>";
-        htmlDifficulty.innerHTML = "<p>Difficulty level: " + difficulty + "</p>";
-        htmlPoints.innerHTML = "<p>Your Points: " + userPoints + "</p>";
-        htmlTurn.innerHTML = "<p>Actual Turn: Ai</p>";
-    }
+    console.log("End of window.onload");
 };
 
-function getValueFromMap(map, data) {
-    for (let [key, value] of map.entries()) {
-        if (value === data)
-            return key;
+function savePoints(htmlUserPoints) {
+    let playersFromLocalStorage = [];
+    if (localStorage.players === undefined) {
+        playersFromLocalStorage.push({playerName: nick, score: userPoints});
+        localStorage.players = JSON.stringify(playersFromLocalStorage);
+    } else {
+        playersFromLocalStorage = JSON.parse(localStorage.players);
+        let userInStorage = false;
+        for (let i in playersFromLocalStorage) {
+            if (nick === playersFromLocalStorage[i].playerName) {
+                playersFromLocalStorage[i].score += userPoints;
+                userPoints = 0;
+                htmlUserPoints.innerHTML = "<p>Your Points: " + userPoints + "</p>";
+                userInStorage = true;
+                break;
+            }
+        }
+        if (!userInStorage) {
+            playersFromLocalStorage.push({playerName: nick, score: userPoints});
+        }
     }
+    function compare(a, b) {
+        return b.score - a.score;
+    }
+    playersFromLocalStorage.sort(compare);
+    localStorage.players = JSON.stringify(playersFromLocalStorage);
 }
 
 function turnAIDummy(htmlAllSquares) {
@@ -108,188 +160,9 @@ function turnAIDummy(htmlAllSquares) {
             break;
         }
     }
-    refreshHtmlBoard(htmlAllSquares, board);
-    if (checkWin()) {
-        gameInProgress = false;
-        winning = "AI dummy";
-    }
-    turn = true;
-
 }
 
-function turnAiHard(htmlAllSquares) {
-
-
-    while (true) {
-
-        for (let i = 0; i < startingPos.length; i++) {
-            if (!turn) {
-                if (!firstMoveOfHardAi) {
-                    if (board[coordinates[startingPos[i]][0]][coordinates[startingPos[i]][1]] === " ") {
-                        startHardAiPos = startingPos[i];
-                        console.log("hello");
-                        board[coordinates[startHardAiPos][0]][coordinates[startHardAiPos][1]] = (userSign === "X") ? "O" : "X";
-                        firstMoveOfHardAi = true;
-                        turn = true;
-                        break;
-                    }
-                } else {
-                    blockPlayerMoveHorizontal();
-                    refreshHtmlBoard(htmlAllSquares, board);
-                    moveHorizontal(htmlAllSquares);
-
-                    turn = true;
-                    break;
-                }
-            }
-        }
-        break;
-
-
-    }
-
-    refreshHtmlBoard(htmlAllSquares, board);
-    if (checkWin()) {
-        gameInProgress = false;
-        winning = "AI hard";
-    }
-    turn = true;
-}
-
-function moveHorizontal(htmlAllSquares) {
-    if (!turn) {
-        console.log("moveHorizontal");
-        startHardAiPos = startHardAiPos + 3;
-        if (board[coordinates[startHardAiPos][0]][coordinates[startHardAiPos][1]] === " ") {
-            board[coordinates[startHardAiPos][0]][coordinates[startHardAiPos][1]] = (userSign === "X") ? "O" : "X";
-            turn = true;
-        } else {
-            console.log("moveHorizontalFalse");
-            //firstMoveOfHardAi = false;
-            //turnAiHard(htmlAllSquares);
-        }
-    }
-}
-
-function blockPlayerMoveHorizontal() {
-
-    if (!turn) {
-        console.log("blockHorizontal");
-        for (let i = 0; i < board.length; i++) {
-            for (let j = 0; j < board.length; j++) {
-                if (board[j][i] === userSign || board[j][i] === " ") {
-                    if (j < 1) {
-                        if (board[j][i] === userSign && board[j + 1][i] === userSign && board[j + 2][i] === " ") {
-                            board[j + 2][i] = "O";
-                            turn = true;
-                        }
-                    } else if (j < 2) {
-                        if (board[j][i] === userSign && board[j + 1][i] === userSign && board[j - 1][i] === " ") {
-                            board[j - 1][i] = "O";
-                            turn = true;
-                        }
-
-                    }
-                } else {
-                    blockPlayerMoveDiagonal();
-                }
-            }
-        }
-    }
-}
-
-function blockPlayerMoveDiagonal() {
-
-
-    if (!turn && checkPlayerMoveDiagonal()) {
-        console.log("blockDiagonal");
-        for (let i = 0; i < board.length; i++) {
-            for (let j = 0; j < board.length; j++) {
-                if (board[j][i] === userSign) {
-                    if (j < 1) {
-                        if (board[j][i] === userSign && board[j + 1][i + 1] === userSign) {
-                            board[j + 2][i + 2] = "O";
-                            turn = true;
-                        } else if (board[j][i] === userSign && board[j + 2][i - 1] === userSign) {
-                            board[j + 2][i - 2] = "O";
-                            turn = true;
-                        }
-                    } else if (j < 2) {
-                        if (board[j][i] === userSign && board[j + 1][i - 1] === userSign && board[j - 1][i + 1] === " ") {
-                            board[j - 1][i + 1] = "O";
-                            turn = true;
-                        } else if (board[j][i] === userSign && board[j + 1][i - 1] === userSign && board[j - 1][i + 1] === " ") {
-                            board[j - 1][i + 1] = "O";
-                            turn = true;
-                        }
-                    }
-                }
-            }
-        }
-    } else {
-        blockPlayerMoveVertical();
-    }
-}
-
-function checkPlayerMoveDiagonal() {
-    if (!turn) {
-        for (let i = 0; i < board.length; i++) {
-            for (let j = 0; j < board.length; j++) {
-                if (board[j][i] === userSign) {
-                    if (j < 1) {
-                        if (board[j][i] === userSign && board[j + 1][i + 1] === userSign && board[j + 2][i + 2] === " ") {
-                            return true;
-                        } else if (board[j][i] === userSign && board[j + 2][i - 1] === userSign && board[j + 2][i - 2] === " ") {
-                            return true;
-                        }
-                    } else if (j < 2) {
-
-                        if (board[j][i] === userSign && board[j + 1][i - 1] === userSign && board[j - 1][i + 1] === " ") {
-                            return true;
-                        } else if (board[j][i] === userSign && board[j - 1][i + 1] === userSign && board[j - 1][i + 1] === " ") {
-                            return true;
-                        }
-                    }
-                }
-            }
-        }
-        return false;
-    }
-
-}
-
-function blockPlayerMoveVertical() {
-    if (!turn) {
-        console.log("blockVertical");
-        for (let j = 0; j < board.length; j++) {
-            for (let i = 0; i <= board.length; i++) {
-                console.log("hello");
-                if (board[j][i] === userSign) {
-                    if (board[j][i] === userSign && board[j][i] === userSign && board[j][i + 2] === " ") {
-                        board[j][i + 2] = (userSign === "X") ? "O" : "X";
-                        turn = true;
-                        break;
-                    }
-                }
-            }
-        }
-    }
-
-}
-
-function checkStateOfGame(htmlAllSquares) {
-    if (!gameInProgress || checkIfBoardFull()) {
-        winning = "";
-        refreshHtmlBoard(htmlAllSquares, board);
-        gameInProgress = false;
-        if (winning === "") {
-            refreshHtmlBoard(htmlAllSquares, board);
-        }
-
-    }
-}
-
-function checkIfBoardFull() {
+function checkDraw() {
     for (let y = 0; y < 3; y++) {
         for (let x = 0; x < 3; x++) {
             if (board[y][x] === " ") {
@@ -301,13 +174,11 @@ function checkIfBoardFull() {
 }
 
 function resetBoard() {
-    // board = freshBoard;
     for (let y = 0; y < 3; y++) {
         for (let x = 0; x < 3; x++) {
             board[y][x] = " ";
         }
     }
-    turn = true;
 }
 
 function refreshHtmlBoard(htmlSquares, bordIn) {
@@ -323,8 +194,9 @@ function refreshHtmlBoard(htmlSquares, bordIn) {
 function putMarkerOnBoard(coordinates, value) {
     if (board[coordinates[0]][coordinates[1]] === " ") {
         board[coordinates[0]][coordinates[1]] = value;
-        turn = !turn;
+        return true;
     }
+    return false;
 }
 
 function checkWin() {
@@ -378,3 +250,24 @@ function checkDiagonal() {
     }
 }
 
+// function increaseDifficulty(htmlIncrease) {
+//     if (difficulty < 3 && difficulty++) {
+//         htmlIncrease.innerHTML = "<p>Difficulty: " + difficultMap.get(difficulty) + "</p>";
+//     }
+// }
+//
+// function decreaseDifficulty(htmlIncrease) {
+//     if (difficulty > 1 && difficulty--) {
+//         htmlIncrease.innerHTML = "<p>Difficulty: " + difficultMap.get(difficulty) + "</p>";
+//     }
+// }
+//
+// function setUserSignX(htmlYourSign) {
+//     userSign = "X";
+//     htmlYourSign.innerHTML = "<p>Your sign: " + userSign + "</p>";
+// }
+//
+// function setUserSignO(htmlYourSign) {
+//     userSign = "O";
+//     htmlYourSign.innerHTML = "<p>Your sign: " + userSign + "</p>";
+// }
