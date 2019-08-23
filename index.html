@@ -11,31 +11,50 @@
         <h1>Tic Tac Toe</h1>
         <ul>
             <li id="newGame"><a href="#">Start NewGame</a></li>
-            <div id="createNewGame">
+            <div class="menuBox" id="createNewGame">
                 <form method="post" id="difficulty" action="html/game.html">
-                <p>Chose Difficulty Level</p>
-                <label>
-                    <input type="radio" name="difficulty" value="easy">
-                </label>
-                <label>Easy</label>
-                <label>
-                    <input type="radio" name="difficulty" value="medium" checked>
-                </label>
-                <label>Medium</label>
-                <label>
-                    <input type="radio" name="difficulty" value="hard" >
-                </label>
-                <label>Hard</label><br>
-                <label for="nick">Nick</label>
-                <input id="nick" type="text" required data-error="Can't be empty" placeholder="Write your nick name" pattern="^[A-Za-z0-9]{1,10}$">
-                    <br><p>Choose your sign:</p>
+                    <p>Chose Difficulty Level</p>
+                    <label>
+                        <input type="radio" name="difficulty" value="easy">
+                    </label>
+                    <label>Easy</label>
+                    <label>
+                        <input type="radio" name="difficulty" value="medium" checked>
+                    </label>
+                    <label>Medium</label>
+                    <label>
+                        <input type="radio" name="difficulty" value="hard">
+                    </label>
+                    <label>Hard</label><br>
+                    <label for="nick">Nick</label>
+                    <input id="nick" type="text" required data-error="Can't be empty" placeholder="Write your nick name"
+                           pattern="^[A-Za-z0-9]{1,10}$">
+                    <br>
+                    <p>Choose your sign:</p>
                     <input type="radio" id="x" name="sign" value="X" checked>
                     <label for="x">X</label>
                     <input type="radio" id="o" name="sign" value="O">
                     <label for="o">O</label>
-                <br><button type="submit" class="login-btn">Login</button>
-            </form></div>
-            <li><a href="#"> TOP 10</a></li>
+                    <br>
+                    <button type="submit" class="login-btn">Login</button>
+                </form>
+            </div>
+            <li id="top10btn"><a href="#"> TOP 10</a></li>
+            <div class="menuBox" id="top10">
+                <table class="darkTable">
+                    <thead id="tableTop10">
+                    <tr class="topTenTitles">
+                        <th>Name</th>
+                        <th>Score</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr class="topTenRow">
+                    <tr>
+                    </tbody>
+                </table>
+
+            </div>
             <li><a href="#"> How To Play</a></li>
             <li><a href="#"> Credits</a></li>
         </ul>

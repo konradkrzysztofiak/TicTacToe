@@ -3,6 +3,33 @@ window.onload = function () {
     let nick = document.querySelector("#nick");
     let newGame = document.querySelector("#newGame");
     let createNewGameBtn = document.getElementById("createNewGame");
+    let top10Btn = document.getElementById("top10btn");
+    let top10Area = document.getElementById("top10");
+
+    let htmlTable = document.querySelector("#tableTop10");
+    let htmlTableTr = document.createElement("tr");
+    let htmlTableThName = document.createElement("th");
+    let htmlTableThPints = document.createElement("th");
+        // htmlTableThName.innerText = "ja";
+        // htmlTableThPints.innerText = 100;
+        // htmlTableTr.append(htmlTableThName, htmlTableThPints);
+        // htmlTable.appendChild(htmlTableTr);
+
+        //todo how we get players and theirs score from local store
+    let playersFromLocalStorage = JSON.parse(localStorage.players);
+    for (let i = 0; i < playersFromLocalStorage.length; i++) {
+        let htmlTableTr = document.createElement("tr");
+        let htmlTableThName = document.createElement("th");
+        let htmlTableThPints = document.createElement("th");
+        htmlTableThName.innerText = playersFromLocalStorage[i].playerName;
+        htmlTableThPints.innerText = playersFromLocalStorage[i].score;
+        htmlTableTr.append(htmlTableThName, htmlTableThPints);
+        htmlTable.appendChild(htmlTableTr);
+        console.log(playersFromLocalStorage[i].playerName + " " + playersFromLocalStorage[i].score);
+    }
+
+
+
 
     btnLogin.addEventListener('click', function () {
         localStorage.nick = nick.value;
@@ -21,6 +48,9 @@ window.onload = function () {
     newGame.addEventListener('click', function () {
         showHide(createNewGameBtn);
     });
+    top10Btn.addEventListener('click', function () {
+            showHide(top10Area);
+        });
 
     function showHide(divId) {
         if (divId.style.display === "none" ||

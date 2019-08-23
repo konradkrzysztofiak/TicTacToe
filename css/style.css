@@ -129,7 +129,7 @@ h1{
     font-weight: bold;
     letter-spacing: 3rem;
 }
-#createNewGame{
+.menuBox{
     display: none;
     position: relative;
     right: 210px;
@@ -151,6 +151,8 @@ h1{
     padding-top: 20%;
 }
 table.darkTable {
+    position: relative;
+    left: 40%;
     font-family: "Arial Black", Gadget, sans-serif;
     border: 4px solid #000000;
     /*background-color: #4A4A4A;*/
@@ -164,26 +166,23 @@ table.darkTable td, table.darkTable th {
     padding: 3px 3px;
 }
 table.darkTable tbody td {
-    font-size: 20px;
+    font-size: 15px;
     font-weight: bold;
-    color: #000000;
+    color: floralwhite;
 }
 table.darkTable tr:nth-child(even) {
-    background: #B98380;
+    background-color: rgba(255,255,255,0.3);
 }
 table.darkTable thead {
-    background: #FF0000;
-    background: -moz-linear-gradient(top, #ff4040 0%, #ff1919 66%, #FF0000 100%);
-    background: -webkit-linear-gradient(top, #ff4040 0%, #ff1919 66%, #FF0000 100%);
-    background: linear-gradient(to bottom, #ff4040 0%, #ff1919 66%, #FF0000 100%);
+    background-color: rgba(0,0,0,0.3);
     border-bottom: 3px solid #000000;
 }
 table.darkTable thead th {
-    font-size: 20px;
+    font-size: 15px;
     font-weight: bold;
-    color: #000000;
+    color: floralwhite;
     text-align: center;
-    border-left: 0px solid #4A4A4A;
+    border-left: 1px solid #4A4A4A;
 }
 table.darkTable thead th:first-child {
     border-left: none;
