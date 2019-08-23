@@ -1,27 +1,205 @@
-#board{
+#container{
     position: absolute;
-    left: 50%;
-    top: 30%;
-    width: 306px;
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    height: 500px;
+}
+#board{
+    position: relative;
+    left: 72%;
+    top: 50%;
+    width: 358px;
+    height: 340px;
     background-color: #000000;
     border: 1px solid;
     display: flex;
     flex-direction: row;
     flex-flow: wrap;
+    background-color: rgba(0,0,0,0.3);
 }
+
+#playerInfo{
+    position: relative;
+    width: 350px;
+    height: 332px;
+    top: 50%;
+    left: 65%;
+
+    border: 4px dotted;
+    background-color: rgba(0,0,0,0.3);
+    color: floralwhite;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+@media (max-width:1280px){
+    #board {
+        left: 30%;
+    }
+
+    #login{
+        left: 64%;
+    }
+
+    #playerInfo{
+        left: 20%;
+    }
+}
+
+@media (max-width:800px){
+    #board {
+        left: 30%;
+    }
+    #login{
+        left: 74%;
+    }
+    #playerInfo{
+        display: none;
+    }
+}
+
+@media (max-width: 400px) {
+    #board {
+        left: 2%;
+    }
+
+}
+
+
 #board .square {
     justify-content: center;
     margin: 1px;
     position: relative;
     display: inline-flex;
-    width: 100px;
-    height: 100px;
+    width: 117px;
+    height: 101px;
     /*min-height: 50px;*/
-    background-color: white;
+    /*background-color: white;*/
+    background-color: rgba(255,255,255,0.5);
+    cursor: pointer;
+
+}
+
+
+#board .square:hover{
+    opacity: 0.7;
 }
 
 #board .square p{
     font-size: 31px;
+}
+
+body{
+    margin: 0;
+    background-image: url("../img/bg.png");
+}
+#login{
+    position: relative;
+    left: 90%;
+    top: 50%;
+}
+
+#login ul{
+    list-style: none;
+    display: block;
+}
+
+#login li{
+    background-color: rgba(0,0,0,0.3);
+    display: grid;
+    width: 315px;
+    min-height: 60px;
+    border: 2px solid;
+}
+
+#login li:hover{
+    opacity: 0.7;
+}
+
+#login a:link{
+    text-decoration: none;
+}
+
+#login a{
+    padding: 15px;
+    color: floralwhite;
+    font-weight: bold;
+    font-size: 20px;
+}
+h1{
+    position: relative;
+    margin-bottom: 50px;
+    right: 150px;
+    color: floralwhite;
+    text-shadow: 2px 2px black;
+    font-size: 40px;
+    font-weight: bold;
+    letter-spacing: 3rem;
+}
+.menuBox{
+    display: none;
+    position: relative;
+    right: 210px;
+    width: 738px;
+    background-color: rgba(0,0,0,0.3);
+    padding: 10px;
+    color: floralwhite;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+
+#btnReset {
+    position: relative;
+    left: 40%;
+}
+
+/*todo table*/
+#topTen {
+    padding-left: 40%;
+    padding-top: 20%;
+}
+table.darkTable {
+    position: relative;
+    left: 40%;
+    font-family: "Arial Black", Gadget, sans-serif;
+    border: 4px solid #000000;
+    /*background-color: #4A4A4A;*/
+    width: 150px;
+    height: 50px;
+    text-align: center;
+    border-collapse: collapse;
+}
+table.darkTable td, table.darkTable th {
+    border: 3px solid #000000;
+    padding: 3px 3px;
+}
+table.darkTable tbody td {
+    font-size: 15px;
+    font-weight: bold;
+    color: floralwhite;
+}
+table.darkTable tr:nth-child(even) {
+    background-color: rgba(255,255,255,0.3);
+}
+table.darkTable thead {
+    background-color: rgba(0,0,0,0.3);
+    border-bottom: 3px solid #000000;
+}
+table.darkTable thead th {
+    font-size: 15px;
+    font-weight: bold;
+    color: floralwhite;
+    text-align: center;
+    border-left: 1px solid #4A4A4A;
+}
+table.darkTable thead th:first-child {
+    border-left: none;
+}
+
+table.darkTable tfoot td {
+    font-size: 12px;
 }
 
 

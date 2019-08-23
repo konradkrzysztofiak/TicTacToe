@@ -7,36 +7,54 @@
     <script src="../js/game.js"></script>
 </head>
 <body>
-<div id="welcomeMessage"></div>
-<div id="board">
-    <div class="square" value="0">
-        <p></p>
+<div id="container">
+    <div id="playerInfo">
+        <div id="welcomeMessage"></div>
+        <div id="difficultMessage"></div>
+        <div id="chooseSignMessage"></div>
+        <div id="userPoints"></div>
+        <div id="AIPoints"></div>
+        <div id="turn"></div>
+        <div id="winnerIsMessage"></div>
+        <div>
+            <button id="btcPlayAgain">Play Again</button>
+        </div>
+        <div>
+            <button id="btcSave">Save Points</button>
+        </div>
     </div>
-    <div class="square" value="1">
-        <p></p>
+
+    <div id="board">
+        <div class="square" id="1">
+            <p></p>
+        </div>
+        <div class="square" id="2">
+            <p></p>
+        </div>
+        <div class="square" id="3">
+            <p></p>
+        </div>
+        <div class="square" id="4">
+            <p></p>
+        </div>
+        <div class="square" id="5">
+            <p></p>
+        </div>
+        <div class="square" id="6">
+            <p></p>
+        </div>
+        <div class="square" id="7">
+            <p></p>
+        </div>
+        <div class="square" id="8">
+            <p></p>
+        </div>
+        <div class="square" id="9">
+            <p></p>
+        </div>
+        <button id="btnReset" type="button">Reset</button>
+
     </div>
-    <div class="square" value="2">
-        <p></p>
-    </div>
-    <div class="square" value="3">
-        <p></p>
-    </div>
-    <div class="square" value="4">
-        <p></p>
-    </div>
-    <div class="square" value="5">
-        <p></p>
-    </div>
-    <div class="square" value="6">
-        <p></p>
-    </div>
-    <div class="square" value="7">
-        <p></p>
-    </div>
-    <div class="square" value="8">
-        <p></p>
-    </div>
-    <button id="btnReset" type="button" >Reset</button>
 </div>
 </body>
 </html>
