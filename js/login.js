@@ -7,6 +7,8 @@ window.onload = function () {
     let top10Area = document.getElementById("top10");
     let howToPlayBtn = document.getElementById("howToPlayBtn");
     let howToPlayArea = document.getElementById("howToPlay");
+    let creditsBtn = document.getElementById("creditsBtn");
+    let creditsArea = document.getElementById("credits");
 
     let htmlTable = document.querySelector("#tableTop10");
     let htmlTableTr = document.createElement("tr");
@@ -55,6 +57,9 @@ window.onload = function () {
 
     howToPlayBtn.addEventListener('click', function () {
         showHide(howToPlayArea);
+    });
+    creditsBtn.addEventListener('click', function () {
+        showHide(creditsArea);
     });
 
     function showHide(divId) {

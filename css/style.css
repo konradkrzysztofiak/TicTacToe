@@ -141,7 +141,9 @@ h1{
     display: none;
     position: relative;
     right: 210px;
+    width: 738px;
     background-color: rgba(0,0,0,0.3);
+    padding: 10px;
     color: floralwhite;
     font-weight: bold;
     margin-bottom: 10px;
