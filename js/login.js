@@ -37,6 +37,7 @@ window.onload = function () {
         localStorage.nick = nick.value;
     });
 
+
     document.getElementById('difficulty').onclick = function () {
         let value = getRadioValue(this, 'difficulty');
         localStorage.difficulty = value;
@@ -87,3 +88,4 @@ window.onload = function () {
 
 
 };
+
