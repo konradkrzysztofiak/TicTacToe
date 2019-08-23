@@ -35,15 +35,15 @@
 
 @media (max-width:1280px){
     #board {
-        left: 40%;
+        left: 30%;
     }
 
     #login{
-        left: 74%;
+        left: 64%;
     }
 
     #playerInfo{
-        left: 30%;
+        left: 20%;
     }
 }
 
