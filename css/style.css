@@ -37,6 +37,11 @@
     #board {
         left: 40%;
     }
+
+    #login{
+        left: 74%;
+    }
+
     #playerInfo{
         left: 30%;
     }
@@ -45,6 +50,9 @@
 @media (max-width:800px){
     #board {
         left: 30%;
+    }
+    #login{
+        left: 74%;
     }
     #playerInfo{
         display: none;
