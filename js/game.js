@@ -103,7 +103,13 @@ window.onload = function () {
 
             //todo AI easy part
             if (turn === "AI") {
-                turnAIDummy(htmlAllSquares);
+                if (difficulty === "easy") {
+                    turnAIDummy(htmlAllSquares);
+                } else if (difficulty === "medium") {
+                    turnAIMedium(htmlAllSquares);
+                } else {
+                    turnAIDummy(htmlAllSquares);
+                }
                 refreshHtmlBoard(htmlAllSquares, board);
                 turn = "human";
                 if (checkWin()) {
@@ -153,6 +159,66 @@ function savePoints(htmlUserPoints) {
 
 function turnAIDummy(htmlAllSquares) {
     while (true) {
+        let y = Math.round(Math.random() * 2);
+        let x = Math.round(Math.random() * 2);
+        if (board[y][x] === " ") {
+            board[y][x] = (userSign === "X") ? "O" : "X";
+            break;
+        }
+    }
+}
+
+function turnAIMedium(htmlAllSquares) {
+    let AISign = (userSign === "X") ? "O" : "X";
+    if (board[1][1] === " ") {
+        board[1][1] = AISign;
+        return;
+    }
+    while (true) {
+        for (let y = 0; y < 3; y++) {
+            if (board[y][0] === AISign && board[y][1] === AISign && board[y][2] === " ") {
+                board[y][2] = AISign;
+                return;
+            }
+            if (board[y][1] === AISign && board[y][2] === AISign && board[y][0] === " ") {
+                board[y][0] = AISign;
+                return;
+            }
+            if (board[y][2] === AISign && board[y][0] === AISign && board[y][1] === " ") {
+                board[y][1] = AISign;
+                return;
+            }
+            if (board[0][y] === AISign && board[1][y] === AISign && board[2][y] === " ") {
+                board[2][y] = AISign;
+                return;
+            }
+            if (board[1][y] === AISign && board[2][y] === AISign && board[0][y] === " ") {
+                board[0][y] = AISign;
+                return;
+            }
+            if (board[2][y] === AISign && board[0][y] === AISign && board[0][y] === " ") {
+                board[1][y] = AISign;
+                return;
+            }
+        }
+        if (board[0][0] === AISign && board[1][1] === AISign && board[2][2] === " ") {
+            board[2][2] = AISign;
+            return;
+        }
+        if (board[0][2] === AISign && board[1][1] === AISign && board[2][0] === " ") {
+            board[2][0] = AISign;
+            return;
+        }
+        if (board[2][2] === AISign && board[1][1] === AISign && board[0][0] === " ") {
+            board[0][0] = AISign;
+            return;
+        }
+        if (board[2][0] === AISign && board[1][1] === AISign && board[0][2] === " ") {
+            board[0][2] = AISign;
+            return;
+        }
+
+
         let y = Math.round(Math.random() * 2);
         let x = Math.round(Math.random() * 2);
         if (board[y][x] === " ") {
