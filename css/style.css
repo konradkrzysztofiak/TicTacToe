@@ -34,7 +34,7 @@
 }
 
 #playerInfo * {
-    border: 11px;
+    padding: 6px;
 }
 
 @media (max-width:1280px){
