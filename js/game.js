@@ -112,6 +112,14 @@ function turnAI(htmlAllSquares, htmlAIPoints, htmlWinnerIsMessage) {
 }
 
 function savePoints(htmlUserPoints) {
+    // try {
+    //     JSON.parse("a"); // Produces a SyntaxError
+    // } catch (error) {
+    //     // Handle the error
+    //     alert(error.message);
+    // }
+    // throw new Error("I hungry. Fridge empty.");
+
     let playersFromLocalStorage = [];
     if (localStorage.players === undefined) {
         playersFromLocalStorage.push({playerName: nick, score: userPoints});
