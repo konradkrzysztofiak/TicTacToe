@@ -41,25 +41,13 @@ window.onload = function () {
     htmlWinnerIsMessage.innerHTML = "Winner is: ";
 
     document.querySelector("#btnReset").addEventListener("click", function () {
-        resetBoard();
-        refreshHtmlBoard(htmlAllSquares, board);
-        turn = (Math.round(Math.random()) === 1) ? "human" : "AI";
-        if (turn === "AI") {
-            turnAI(htmlAllSquares, htmlAIPoints, htmlWinnerIsMessage);
-
-        }
+        btcPlayAgain(htmlAllSquares, htmlAIPoints, htmlWinnerIsMessage);
     });
     document.querySelector("#btcPlayAgain").addEventListener("click", function () {
-        resetBoard();
-        refreshHtmlBoard(htmlAllSquares, board);
-        turn = (Math.round(Math.random()) === 1) ? "human" : "AI";
-        if (turn === "AI") {
-            turnAI(htmlAllSquares, htmlAIPoints, htmlWinnerIsMessage);
-
-        }
+        btcPlayAgain(htmlAllSquares, htmlAIPoints, htmlWinnerIsMessage);
     });
     document.querySelector("#btcSave").addEventListener("click", function () {
-        savePoints(htmlUserPoints);
+        btcSavePoints(htmlUserPoints);
     });
 
 
@@ -75,6 +63,7 @@ window.onload = function () {
                     htmlWinnerIsMessage.innerHTML = `Winner is: ${winning} `;
                     turn = "";
                 }
+                refreshHtmlBoard(htmlAllSquares, board);
                 if (checkDraw() && turn !== "") {
                     htmlWinnerIsMessage.innerHTML = " !!! DRAW !!! ";
                     turn = "";
@@ -85,6 +74,51 @@ window.onload = function () {
         };
     }
 };
+
+function btcPlayAgain(htmlAllSquares, htmlAIPoints, htmlWinnerIsMessage) {
+    resetBoard();
+    refreshHtmlBoard(htmlAllSquares, board);
+    turn = (Math.round(Math.random()) === 1) ? "human" : "AI";
+    if (turn === "AI") {
+        turnAI(htmlAllSquares, htmlAIPoints, htmlWinnerIsMessage);
+
+    }
+}
+
+function btcSavePoints(htmlUserPoints) {
+    let playersFromLocalStorage = [];
+    if (localStorage.players === undefined) {
+        playersFromLocalStorage.push({playerName: nick, score: userPoints});
+        localStorage.players = JSON.stringify(playersFromLocalStorage);
+    } else {
+        const __ret = handleUser(playersFromLocalStorage, htmlUserPoints);
+        playersFromLocalStorage = __ret.playersFromLocalStorage;
+        let userInStorage = __ret.userInStorage;
+        if (!userInStorage) {
+            playersFromLocalStorage.push({playerName: nick, score: userPoints});
+        }
+    }
+    function compare(a, b) {
+        return b.score - a.score;
+    }
+    playersFromLocalStorage.sort(compare);
+    localStorage.players = JSON.stringify(playersFromLocalStorage);
+}
+
+function handleUser(playersFromLocalStorage, htmlUserPoints) {
+    playersFromLocalStorage = JSON.parse(localStorage.players);
+    let userInStorage = false;
+    for (let i = 0; i < playersFromLocalStorage.length; i++) {
+        if (nick === playersFromLocalStorage[i].playerName) {
+            playersFromLocalStorage[i].score += userPoints;
+            userPoints = 0;
+            htmlUserPoints.innerHTML = `Your Points: ${userPoints}`;
+            userInStorage = true;
+            break;
+        }
+    }
+    return {playersFromLocalStorage, userInStorage};
+}
 
 function turnAI(htmlAllSquares, htmlAIPoints, htmlWinnerIsMessage) {
     if (turn === "AI") {
@@ -109,42 +143,6 @@ function turnAI(htmlAllSquares, htmlAIPoints, htmlWinnerIsMessage) {
         }
         refreshHtmlBoard(htmlAllSquares, board);
     }
-}
-
-function savePoints(htmlUserPoints) {
-    // try {
-    //     JSON.parse("a"); // Produces a SyntaxError
-    // } catch (error) {
-    //     // Handle the error
-    //     alert(error.message);
-    // }
-    // throw new Error("I hungry. Fridge empty.");
-
-    let playersFromLocalStorage = [];
-    if (localStorage.players === undefined) {
-        playersFromLocalStorage.push({playerName: nick, score: userPoints});
-        localStorage.players = JSON.stringify(playersFromLocalStorage);
-    } else {
-        playersFromLocalStorage = JSON.parse(localStorage.players);
-        let userInStorage = false;
-        for (let i = 0; i < playersFromLocalStorage.length; i++) {
-            if (nick === playersFromLocalStorage[i].playerName) {
-                playersFromLocalStorage[i].score += userPoints;
-                userPoints = 0;
-                htmlUserPoints.innerHTML = `Your Points: ${userPoints}`;
-                userInStorage = true;
-                break;
-            }
-        }
-        if (!userInStorage) {
-            playersFromLocalStorage.push({playerName: nick, score: userPoints});
-        }
-    }
-    function compare(a, b) {
-        return b.score - a.score;
-    }
-    playersFromLocalStorage.sort(compare);
-    localStorage.players = JSON.stringify(playersFromLocalStorage);
 }
 
 function turnAIDummy() {
@@ -340,18 +338,6 @@ function resetBoard() {
         }
     }
 }
-
-
-function refreshHtmlBoard(htmlSquares, bordIn) {
-    let z = 0;
-    for (let y = 0; y < 3; y++) {
-        for (let x = 0; x < 3; x++) {
-            htmlSquares[z++].querySelector("p").innerHTML = bordIn[y][x];
-        }
-    }
-}
-
-
 function putMarkerOnBoard(coordinates, value) {
     if (board[coordinates[0]][coordinates[1]] === " ") {
         board[coordinates[0]][coordinates[1]] = value;

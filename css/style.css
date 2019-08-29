@@ -33,6 +33,10 @@
     font-weight: bold;
 }
 
+#playerInfo * {
+    border: 11px;
+}
+
 @media (max-width:1280px){
     #board {
         left: 30%;
@@ -201,38 +205,3 @@ table.darkTable thead th:first-child {
 table.darkTable tfoot td {
     font-size: 12px;
 }
-
-
-
-
-/*#board .square #circle {*/
-/*    !*background: #f00;*!*/
-/*    width: 50%;*/
-/*    border-radius: 50%;*/
-/*    border: #000000;*/
-/*    border-style: solid;*/
-/*    fill-opacity: 0%;*/
-/*}*/
-
-/*#board .square .close {*/
-/*    position: absolute;*/
-
-/*    width: 32px;*/
-/*    height: 32px;*/
-/*    opacity: 0.3;*/
-/*}*/
-
-/*.close:before, .close:after {*/
-/*    position: absolute;*/
-/*    left: 15px;*/
-/*    content: ' ';*/
-/*    height: 33px;*/
-/*    width: 2px;*/
-/*    background-color: #333;*/
-/*}*/
-/*.close:before {*/
-/*    transform: rotate(45deg);*/
-/*}*/
-/*.close:after {*/
-/*    transform: rotate(-45deg);*/
-/*}*/
