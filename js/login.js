@@ -19,17 +19,19 @@ window.onload = function () {
     // htmlTableTr.append(htmlTableThName, htmlTableThPints);
     // htmlTable.appendChild(htmlTableTr);
 
-    //todo how we get players and theirs score from local store
-    let playersFromLocalStorage = JSON.parse(localStorage.players);
-    for (let i = 0; i < playersFromLocalStorage.length; i++) {
-        let htmlTableTr = document.createElement("tr");
-        let htmlTableThName = document.createElement("th");
-        let htmlTableThPints = document.createElement("th");
-        htmlTableThName.innerText = playersFromLocalStorage[i].playerName;
-        htmlTableThPints.innerText = playersFromLocalStorage[i].score;
-        htmlTableTr.append(htmlTableThName, htmlTableThPints);
-        htmlTable.appendChild(htmlTableTr);
-        console.log(playersFromLocalStorage[i].playerName + " " + playersFromLocalStorage[i].score);
+    let playersFromLocalStorage = [];
+    if (localStorage.players !== undefined) {
+        playersFromLocalStorage = JSON.parse(localStorage.players);
+        for (let i = 0; i < playersFromLocalStorage.length; i++) {
+            let htmlTableTr = document.createElement("tr");
+            let htmlTableThName = document.createElement("th");
+            let htmlTableThPints = document.createElement("th");
+            htmlTableThName.innerText = playersFromLocalStorage[i].playerName;
+            htmlTableThPints.innerText = playersFromLocalStorage[i].score;
+            htmlTableTr.append(htmlTableThName, htmlTableThPints);
+            htmlTable.appendChild(htmlTableTr);
+            console.log(playersFromLocalStorage[i].playerName + " " + playersFromLocalStorage[i].score);
+        }
     }
 
 

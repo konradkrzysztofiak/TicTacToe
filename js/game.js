@@ -10,6 +10,7 @@ let board = [
     [" ", " ", " "],
     [" ", " ", " "],
 ];
+
 let coordinates = {
     1: [0, 0],
     2: [0, 1],
@@ -27,13 +28,13 @@ window.onload = function () {
     let {htmlAllSquares, htmlUserPoints, htmlAIPoints, htmlWinnerIsMessage} = initHTMLs();
 
     document.querySelector("#btnReset").addEventListener("click", function () {
-        initBtnReset(htmlAllSquares, htmlAIPoints, htmlWinnerIsMessage);
+        btcPlayAgain(htmlAllSquares, htmlAIPoints, htmlWinnerIsMessage);
     });
     document.querySelector("#btcPlayAgain").addEventListener("click", function () {
-        initBtnReset(htmlAllSquares, htmlAIPoints, htmlWinnerIsMessage);
+        btcPlayAgain(htmlAllSquares, htmlAIPoints, htmlWinnerIsMessage);
     });
     document.querySelector("#btcSave").addEventListener("click", function () {
-        initBtnSave(htmlUserPoints);
+        btcSavePoints(htmlUserPoints);
     });
 
 
@@ -41,6 +42,7 @@ window.onload = function () {
         htmlAllSquares[i].onclick = function () {
             if (turn === "human") {
                 turn = (putMarkerOnBoard(coordinates[this.id], userSign)) ? "AI" : "human";
+                console.log(htmlAllSquares);
                 refreshHtmlBoard(htmlAllSquares, board);
                 if (checkWin()) {
                     winning = nick;
@@ -60,7 +62,7 @@ window.onload = function () {
     }
 };
 
-function initBtnReset(htmlAllSquares, htmlAIPoints, htmlWinnerIsMessage) {
+function btcPlayAgain(htmlAllSquares, htmlAIPoints, htmlWinnerIsMessage) {
     resetBoard();
     refreshHtmlBoard(htmlAllSquares, board);
     turn = (Math.round(Math.random()) === 1) ? "human" : "AI";
@@ -70,22 +72,39 @@ function initBtnReset(htmlAllSquares, htmlAIPoints, htmlWinnerIsMessage) {
     }
 }
 
-function initHTMLs() {
-    let htmlAllSquares = document.querySelectorAll(".square");
-    let htmlDifficulty = document.querySelector("#difficultMessage");
-    let htmlYourSign = document.querySelector("#chooseSignMessage");
-    let htmlUserPoints = document.querySelector("#userPoints");
-    let htmlAIPoints = document.querySelector("#AIPoints");
-    let htmlTurn = document.querySelector("#turn");
-    let htmlWinnerIsMessage = document.querySelector("#winnerIsMessage");
-    htmlYourSign.innerHTML = `Your sign: ${localStorage.sign}`;
-    document.querySelector("#welcomeMessage").innerHTML = `Hello ${nick} Let's play !`;
-    htmlDifficulty.innerHTML = `Difficulty level: ${difficulty}`;
-    htmlUserPoints.innerHTML = `Your Points: ${userPoints}`;
-    htmlAIPoints.innerHTML = `AI Points: ${AIPoints}`;
-    htmlTurn.innerHTML = `Actual Turn: ${(turn === "human") ? "Your's" : "AI"}`;
-    htmlWinnerIsMessage.innerHTML = "Winner is: ";
-    return {htmlAllSquares, htmlUserPoints, htmlAIPoints, htmlWinnerIsMessage};
+function btcSavePoints(htmlUserPoints) {
+    let playersFromLocalStorage = [];
+    if (localStorage.players === undefined) {
+        playersFromLocalStorage.push({playerName: nick, score: userPoints});
+        localStorage.players = JSON.stringify(playersFromLocalStorage);
+    } else {
+        const __ret = handleUser(playersFromLocalStorage, htmlUserPoints);
+        playersFromLocalStorage = __ret.playersFromLocalStorage;
+        let userInStorage = __ret.userInStorage;
+        if (!userInStorage) {
+            playersFromLocalStorage.push({playerName: nick, score: userPoints});
+        }
+    }
+    function compare(a, b) {
+        return b.score - a.score;
+    }
+    playersFromLocalStorage.sort(compare);
+    localStorage.players = JSON.stringify(playersFromLocalStorage);
+}
+
+function handleUser(playersFromLocalStorage, htmlUserPoints) {
+    playersFromLocalStorage = JSON.parse(localStorage.players);
+    let userInStorage = false;
+    for (let i = 0; i < playersFromLocalStorage.length; i++) {
+        if (nick === playersFromLocalStorage[i].playerName) {
+            playersFromLocalStorage[i].score += userPoints;
+            userPoints = 0;
+            htmlUserPoints.innerHTML = `Your Points: ${userPoints}`;
+            userInStorage = true;
+            break;
+        }
+    }
+    return {playersFromLocalStorage, userInStorage};
 }
 
 function turnAI(htmlAllSquares, htmlAIPoints, htmlWinnerIsMessage) {
@@ -111,34 +130,6 @@ function turnAI(htmlAllSquares, htmlAIPoints, htmlWinnerIsMessage) {
         }
         refreshHtmlBoard(htmlAllSquares, board);
     }
-}
-
-function initBtnSave(htmlUserPoints) {
-    let playersFromLocalStorage = [];
-    if (localStorage.players === undefined) {
-        playersFromLocalStorage.push({playerName: nick, score: userPoints});
-        localStorage.players = JSON.stringify(playersFromLocalStorage);
-    } else {
-        playersFromLocalStorage = JSON.parse(localStorage.players);
-        let userInStorage = false;
-        for (let i = 0; i < playersFromLocalStorage.length; i++) {
-            if (nick === playersFromLocalStorage[i].playerName) {
-                playersFromLocalStorage[i].score += userPoints;
-                userPoints = 0;
-                htmlUserPoints.innerHTML = `Your Points: ${userPoints}`;
-                userInStorage = true;
-                break;
-            }
-        }
-        if (!userInStorage) {
-            playersFromLocalStorage.push({playerName: nick, score: userPoints});
-        }
-    }
-    function compare(a, b) {
-        return b.score - a.score;
-    }
-    playersFromLocalStorage.sort(compare);
-    localStorage.players = JSON.stringify(playersFromLocalStorage);
 }
 
 function turnAIDummy() {
