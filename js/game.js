@@ -10,7 +10,6 @@ let board = [
     [" ", " ", " "],
     [" ", " ", " "],
 ];
-
 let coordinates = {
     1: [0, 0],
     2: [0, 1],
@@ -25,6 +24,53 @@ let coordinates = {
 
 
 window.onload = function () {
+    let {htmlAllSquares, htmlUserPoints, htmlAIPoints, htmlWinnerIsMessage} = initHTMLs();
+
+    document.querySelector("#btnReset").addEventListener("click", function () {
+        initBtnReset(htmlAllSquares, htmlAIPoints, htmlWinnerIsMessage);
+    });
+    document.querySelector("#btcPlayAgain").addEventListener("click", function () {
+        initBtnReset(htmlAllSquares, htmlAIPoints, htmlWinnerIsMessage);
+    });
+    document.querySelector("#btcSave").addEventListener("click", function () {
+        initBtnSave(htmlUserPoints);
+    });
+
+
+    for (let i = 0; i < htmlAllSquares.length; i++) {
+        htmlAllSquares[i].onclick = function () {
+            if (turn === "human") {
+                turn = (putMarkerOnBoard(coordinates[this.id], userSign)) ? "AI" : "human";
+                refreshHtmlBoard(htmlAllSquares, board);
+                if (checkWin()) {
+                    winning = nick;
+                    htmlUserPoints.innerHTML = `Your Points: ${++userPoints}`;
+                    htmlWinnerIsMessage.innerHTML = `Winner is: ${winning} `;
+                    turn = "";
+                }
+                refreshHtmlBoard(htmlAllSquares, board);
+                if (checkDraw() && turn !== "") {
+                    htmlWinnerIsMessage.innerHTML = " !!! DRAW !!! ";
+                    turn = "";
+                }
+                refreshHtmlBoard(htmlAllSquares, board);
+            }
+            turnAI(htmlAllSquares, htmlAIPoints, htmlWinnerIsMessage);
+        };
+    }
+};
+
+function initBtnReset(htmlAllSquares, htmlAIPoints, htmlWinnerIsMessage) {
+    resetBoard();
+    refreshHtmlBoard(htmlAllSquares, board);
+    turn = (Math.round(Math.random()) === 1) ? "human" : "AI";
+    if (turn === "AI") {
+        turnAI(htmlAllSquares, htmlAIPoints, htmlWinnerIsMessage);
+
+    }
+}
+
+function initHTMLs() {
     let htmlAllSquares = document.querySelectorAll(".square");
     let htmlDifficulty = document.querySelector("#difficultMessage");
     let htmlYourSign = document.querySelector("#chooseSignMessage");
@@ -39,52 +85,8 @@ window.onload = function () {
     htmlAIPoints.innerHTML = `AI Points: ${AIPoints}`;
     htmlTurn.innerHTML = `Actual Turn: ${(turn === "human") ? "Your's" : "AI"}`;
     htmlWinnerIsMessage.innerHTML = "Winner is: ";
-
-    document.querySelector("#btnReset").addEventListener("click", function () {
-        resetBoard();
-        refreshHtmlBoard(htmlAllSquares, board);
-        turn = (Math.round(Math.random()) === 1) ? "human" : "AI";
-        if (turn === "AI") {
-            turnAI(htmlAllSquares, htmlAIPoints, htmlWinnerIsMessage);
-
-        }
-    });
-    document.querySelector("#btcPlayAgain").addEventListener("click", function () {
-        resetBoard();
-        refreshHtmlBoard(htmlAllSquares, board);
-        turn = (Math.round(Math.random()) === 1) ? "human" : "AI";
-        if (turn === "AI") {
-            turnAI(htmlAllSquares, htmlAIPoints, htmlWinnerIsMessage);
-
-        }
-    });
-    document.querySelector("#btcSave").addEventListener("click", function () {
-        savePoints(htmlUserPoints);
-    });
-
-
-    for (let i = 0; i < htmlAllSquares.length; i++) {
-        htmlAllSquares[i].onclick = function () {
-            if (turn === "human") {
-                turn = (putMarkerOnBoard(coordinates[this.id], userSign)) ? "AI" : "human";
-                console.log(htmlAllSquares);
-                refreshHtmlBoard(htmlAllSquares, board);
-                if (checkWin()) {
-                    winning = nick;
-                    htmlUserPoints.innerHTML = `Your Points: ${++userPoints}`;
-                    htmlWinnerIsMessage.innerHTML = `Winner is: ${winning} `;
-                    turn = "";
-                }
-                if (checkDraw() && turn !== "") {
-                    htmlWinnerIsMessage.innerHTML = " !!! DRAW !!! ";
-                    turn = "";
-                }
-                refreshHtmlBoard(htmlAllSquares, board);
-            }
-            turnAI(htmlAllSquares, htmlAIPoints, htmlWinnerIsMessage);
-        };
-    }
-};
+    return {htmlAllSquares, htmlUserPoints, htmlAIPoints, htmlWinnerIsMessage};
+}
 
 function turnAI(htmlAllSquares, htmlAIPoints, htmlWinnerIsMessage) {
     if (turn === "AI") {
@@ -111,7 +113,7 @@ function turnAI(htmlAllSquares, htmlAIPoints, htmlWinnerIsMessage) {
     }
 }
 
-function savePoints(htmlUserPoints) {
+function initBtnSave(htmlUserPoints) {
     let playersFromLocalStorage = [];
     if (localStorage.players === undefined) {
         playersFromLocalStorage.push({playerName: nick, score: userPoints});
